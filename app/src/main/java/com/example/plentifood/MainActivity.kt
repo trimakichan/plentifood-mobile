@@ -16,6 +16,7 @@ import com.example.plentifood.ui.composables.PrimaryButton
 import com.example.plentifood.ui.composables.SecondaryButton
 import com.example.plentifood.ui.composables.SingleChoiceSegmentedButton
 import com.example.plentifood.ui.screens.Home
+import com.example.plentifood.ui.screens.search.SearchResultScreen
 import com.example.plentifood.ui.theme.PlentifoodTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PlentifoodTheme {
                 Home()
+//                SearchResultScreen()
             }
         }
     }

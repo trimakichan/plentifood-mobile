@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.plentifood.ui.theme.PlentifoodTheme
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 
 @Composable
 fun SingleChoiceSegmentedButton(modifier: Modifier = Modifier) {
@@ -44,7 +46,17 @@ fun SingleChoiceSegmentedButton(modifier: Modifier = Modifier) {
                     inactiveContentColor = MaterialTheme.colorScheme.onSurface
                 ),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                label = { Text(label) }
+                label = {
+                    Text(
+                        label,
+                        modifier = Modifier.padding(
+                            horizontal = 20.dp,
+                            vertical = 10.dp
+                        )
+                        )
+
+
+                }
             )
         }
     }
