@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,11 +28,17 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.plentifood.ui.composables.SingleChoiceSegmentedButton
 import com.example.plentifood.ui.screens.Home
 import com.example.plentifood.ui.theme.PlentifoodTheme
-
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 
 
 @Composable
@@ -45,9 +52,12 @@ fun SearchResultScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(18.dp)
     ) {
 
+        Column(
+            modifier = modifier
+                .padding(18.dp)
+        ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -88,10 +98,56 @@ fun SearchResultScreen(
 
         SingleChoiceSegmentedButton()
 
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Row(modifier = Modifier
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ){
+            Text(
+                "3 Filters",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+                )
+
+            Text(
+                "24 Results",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+        }
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        SimpleMapScreen(  modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+        )
 
 
     }
 
+}
+
+@Composable
+fun SimpleMapScreen(modifier: Modifier) {
+    val seattle = LatLng(47.6062, -122.3321)
+    val seattleMarkerState = rememberUpdatedMarkerState(position = seattle)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(seattle, 14f)
+    }
+    GoogleMap(
+        modifier = modifier,
+        cameraPositionState = cameraPositionState
+    ) {
+        Marker(
+            state = seattleMarkerState,
+            title = "Seattle",
+            snippet = "Marker in Seattle"
+        )
+    }
 }
 
 

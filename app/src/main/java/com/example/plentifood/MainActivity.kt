@@ -25,12 +25,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PlentifoodTheme {
-                Home()
-//                SearchResultScreen()
+//                Home()
+                SearchResultScreen()
             }
         }
     }
 }
+
+
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
