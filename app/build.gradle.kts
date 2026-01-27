@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -53,6 +54,11 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     // Android Maps Compose composables for the Maps SDK for Android
     implementation("com.google.maps.android:maps-compose:6.12.0")
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.play.services.appsearch)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

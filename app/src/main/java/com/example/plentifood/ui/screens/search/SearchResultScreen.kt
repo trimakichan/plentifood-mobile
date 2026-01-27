@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -77,7 +79,7 @@ fun SearchResultScreen(
                 }
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
             Button(
                 onClick = {
@@ -94,21 +96,39 @@ fun SearchResultScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         SingleChoiceSegmentedButton()
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Row(modifier = Modifier
             .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ){
-            Text(
-                "3 Filters",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    "3 Filters",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
                 )
+
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .size(18.dp)
+                        .rotate(90f)
+
+                )
+
+            }
+
 
             Text(
                 "24 Results",
@@ -119,8 +139,8 @@ fun SearchResultScreen(
         }
         }
 
-        Spacer(modifier = Modifier.height(18.dp))
 
+        HorizontalDivider()
         SimpleMapScreen(  modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
