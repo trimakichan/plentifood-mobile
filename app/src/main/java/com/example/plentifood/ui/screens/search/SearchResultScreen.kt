@@ -1,60 +1,51 @@
 package com.example.plentifood.ui.screens.search
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Tune
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
+import com.example.plentifood.data.models.site.Site
 import com.example.plentifood.ui.composables.InfoCard
 import com.example.plentifood.ui.composables.SingleChoiceSegmentedButton
-import com.example.plentifood.ui.screens.Home
 import com.example.plentifood.ui.theme.PlentifoodTheme
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 
@@ -63,13 +54,23 @@ import com.google.maps.android.compose.rememberUpdatedMarkerState
 fun SearchResultScreen(
     modifier: Modifier = Modifier,
 //    ViewModel() will keep the previous changes even after configuration gets updated.
-    viewModel: SearchResultScreenViewMode = viewModel()
+    viewModel: SearchResultViewMode = viewModel()
 ) {
-    val query = viewModel.query.value
+    val query = viewModel.query
     val options = listOf("Map", "List")
 //    use rememberSaveable to keep the values during configuration changes.
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
+    val totalResults = viewModel.totalResults
+    val sites = viewModel.sites
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchNearbySites(47.6204, -122.3494, 5)
+    }
+
+    LaunchedEffect(viewModel.sites) {
+        println("Results: $totalResults")
+    }
 
     Column(
         modifier = modifier
@@ -116,7 +117,6 @@ fun SearchResultScreen(
                         .padding(4.dp)
                         .size(34.dp)
                         .rotate(90f)
-
                 )
             }
         }
@@ -160,7 +160,7 @@ fun SearchResultScreen(
 
 
             Text(
-                "24 Results",
+                "$totalResults Results",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -176,7 +176,8 @@ fun SearchResultScreen(
                     SimpleMapScreen(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight()
+                            .fillMaxHeight(),
+                        sites
                     )
 
                     InfoCard(
@@ -194,9 +195,8 @@ fun SearchResultScreen(
 }
 
 @Composable
-fun SimpleMapScreen(modifier: Modifier) {
+fun SimpleMapScreen(modifier: Modifier, sites: List<Site>) {
     val seattle = LatLng(47.6062, -122.3321)
-    val seattleMarkerState = rememberUpdatedMarkerState(position = seattle)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(seattle, 14f)
     }
@@ -204,11 +204,29 @@ fun SimpleMapScreen(modifier: Modifier) {
         modifier = modifier,
         cameraPositionState = cameraPositionState
     ) {
-        Marker(
-            state = seattleMarkerState,
-            title = "Seattle",
-            snippet = "Marker in Seattle"
-        )
+        sites.forEach { site ->
+            val position = LatLng(site.latitude, site.longitude)
+
+            val hue = when (site.organizationType) {
+                "food_bank" -> BitmapDescriptorFactory.HUE_ORANGE
+                "church" -> BitmapDescriptorFactory.HUE_ROSE
+                "non_profit" -> BitmapDescriptorFactory.HUE_VIOLET
+                else -> BitmapDescriptorFactory.HUE_AZURE
+            }
+            Marker(
+                state = MarkerState(position),
+                title = site.name,
+                snippet = site.city,
+                icon = BitmapDescriptorFactory.defaultMarker(
+                    hue
+                )
+            )
+        }
+//        Marker(
+//            state = seattleMarkerState,
+//            title = "Seattle",
+//            snippet = "Marker in Seattle"
+//        )
     }
 }
 

@@ -1,8 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
+
+
+val localProps = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
+}
+
+val mapsKey: String = localProps.getProperty("MAPS_API_KEY", "")
 
 android {
     namespace = "com.example.plentifood"
@@ -19,7 +28,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders["MAPS_API_KEY"] = project.findProperty("MAPS_API_KEY") ?: ""
+        manifestPlaceholders["MAPS_API_KEY"] = mapsKey
+
+//        manifestPlaceholders["MAPS_API_KEY"] = project.findProperty("MAPS_API_KEY") ?: ""
     }
 
     buildTypes {
@@ -58,6 +69,13 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.play.services.appsearch)
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

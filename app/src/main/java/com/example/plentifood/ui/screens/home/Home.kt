@@ -1,4 +1,4 @@
-package com.example.plentifood.ui.screens
+package com.example.plentifood.ui.screens.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,7 @@ import com.example.plentifood.R
 import com.example.plentifood.ui.composables.PrimaryButton
 import com.example.plentifood.ui.composables.SecondaryButton
 import com.example.plentifood.ui.theme.PlentifoodTheme
-import com.example.plentifood.viewmodels.HomeViewModel
+import com.example.plentifood.ui.screens.home.HomeViewModel
 
 
 @Composable
