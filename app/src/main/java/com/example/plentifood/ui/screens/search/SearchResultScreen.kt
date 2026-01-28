@@ -27,6 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
@@ -50,6 +55,10 @@ fun SearchResultScreen(
     viewModel: SearchResultScreenViewMode = viewModel()
 ) {
     val query = viewModel.query.value
+    val options = listOf("Map", "List")
+//    use rememberSaveable to keep the values during configuration changes.
+    var selectedIndex by rememberSaveable { mutableStateOf(0) }
+
 
     Column(
         modifier = modifier
@@ -98,7 +107,11 @@ fun SearchResultScreen(
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        SingleChoiceSegmentedButton()
+        SingleChoiceSegmentedButton(
+            options,
+            selectedIndex,
+            onSelectedIndexChange = { selectedIndex = it}
+            )
 
         Spacer(modifier = Modifier.height(18.dp))
 
@@ -139,14 +152,17 @@ fun SearchResultScreen(
         }
         }
 
-
         HorizontalDivider()
-        SimpleMapScreen(  modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-        )
 
-
+        when (options[selectedIndex]) {
+            "Map" -> SimpleMapScreen(  modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+            )
+            "List" -> {
+                Text("ListUI Goes here")
+            }
+        }
     }
 
 }

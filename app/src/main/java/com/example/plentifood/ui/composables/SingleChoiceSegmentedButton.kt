@@ -20,11 +20,20 @@ import com.example.plentifood.ui.theme.PlentifoodTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 @Composable
-fun SingleChoiceSegmentedButton(modifier: Modifier = Modifier) {
-    var selectedIndex by remember { mutableIntStateOf(0) }
-    val options = listOf("List", "Map")
+fun SingleChoiceSegmentedButton(
+    options: List<String>,
+    selectedIndex: Int,
+    onSelectedIndexChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+//    var selectedIndex by remember { mutableIntStateOf(0) }
+//    val options = listOf( "Map", "List")
 
     SingleChoiceSegmentedButtonRow (
         modifier = Modifier
@@ -37,7 +46,7 @@ fun SingleChoiceSegmentedButton(modifier: Modifier = Modifier) {
                 index = index,
                 count = options.size
             ),
-                onClick = { selectedIndex = index },
+                onClick = { onSelectedIndexChange(index) },
                 selected = index == selectedIndex,
                 colors = SegmentedButtonDefaults.colors(
                     activeContainerColor = MaterialTheme.colorScheme.primary,
@@ -66,6 +75,9 @@ fun SingleChoiceSegmentedButton(modifier: Modifier = Modifier) {
 @Composable
 fun SingleChoiceSegmentedButtonPreview() {
     PlentifoodTheme {
-        SingleChoiceSegmentedButton()
+        val options = listOf("Map", "List")
+        var selectedIndex by rememberSaveable { mutableStateOf(0) }
+
+        SingleChoiceSegmentedButton(options,selectedIndex, onSelectedIndexChange = { println("clicked")} )
     }
 }
