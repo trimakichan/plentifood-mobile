@@ -54,9 +54,11 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.remember
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,6 +76,8 @@ fun SearchResultScreen(
     val isLoading = viewModel.isLoading
     val totalResults = viewModel.totalResults
     val sites = viewModel.sites
+
+    var selectedSite by remember { mutableStateOf<Site?>(null)}
 
     LaunchedEffect(Unit) {
         viewModel.fetchNearbySites(47.6204, -122.3494, 5)
@@ -218,18 +222,25 @@ fun SearchResultScreen(
 
                 } else {
                     Box {
-                        SimpleMapScreen(
+                        MapScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight(),
-                            sites
+                            sites = sites,
+                            selectedSite = selectedSite,
+                            onSiteSelected = { clickedSite ->
+                                selectedSite = clickedSite
+                            }
                         )
 
-//                        InfoCard(
-//                            modifier = Modifier
-//                                .align(Alignment.BottomCenter)
-//                                .padding(bottom = 16.dp)
-//                        )
+                        selectedSite?.let { site ->
+                            InfoCard(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 16.dp),
+                                site = site
+                            )
+                        }
                     }
                 }
 
@@ -253,15 +264,31 @@ fun SearchResultScreen(
 }
 
 @Composable
-fun SimpleMapScreen(modifier: Modifier, sites: List<Site>) {
-    val seattle = LatLng(47.6062, -122.3321)
+fun MapScreen(
+    modifier: Modifier,
+    sites: List<Site>,
+    selectedSite: Site?,
+    onSiteSelected: (Site?) -> Unit
+)
+{
+    val userLocation = LatLng(47.6062, -122.3321)
+    val userMarkerState = rememberUpdatedMarkerState(userLocation)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(seattle, 14f)
+        position = CameraPosition.fromLatLngZoom(userLocation, 14f)
     }
     GoogleMap(
         modifier = modifier,
-        cameraPositionState = cameraPositionState
+        cameraPositionState = cameraPositionState,
+        onMapClick = { onSiteSelected(null)}
     ) {
+
+        Marker(
+            state = userMarkerState,
+            title = "Your Current Location",
+            snippet = "Marker in Seattle",
+            onClick = { true }
+        )
+
         sites.forEach { site ->
             val position = LatLng(site.latitude, site.longitude)
 
@@ -277,14 +304,13 @@ fun SimpleMapScreen(modifier: Modifier, sites: List<Site>) {
                 snippet = site.city,
                 icon = BitmapDescriptorFactory.defaultMarker(
                     hue
-                )
+                ),
+                onClick = {
+                            onSiteSelected(site)
+                            true
+                }
             )
         }
-//        Marker(
-//            state = seattleMarkerState,
-//            title = "Seattle",
-//            snippet = "Marker in Seattle"
-//        )
     }
 }
 
