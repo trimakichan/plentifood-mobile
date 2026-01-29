@@ -16,19 +16,22 @@ import androidx.compose.ui.unit.sp
 import com.example.plentifood.ui.theme.PlentifoodTheme
 
 @Composable
-fun PrimaryButton (title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-        ElevatedButton(onClick = { onClick() },
-            modifier = Modifier
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(10.dp),
-            contentPadding = PaddingValues(   horizontal = 24.dp, vertical = 14.dp ),
-            colors = ButtonDefaults.elevatedButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.surface
-            ),
-        ) {
-        Text(title,
-            fontSize = 18.sp)
+fun PrimaryButton(title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    ElevatedButton(
+        onClick = { onClick() },
+        modifier = Modifier
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 14.dp),
+        colors = ButtonDefaults.elevatedButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.surface
+        ),
+    ) {
+        Text(
+            title,
+            fontSize = 18.sp
+        )
     }
 }
 

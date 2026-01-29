@@ -35,17 +35,18 @@ fun SingleChoiceSegmentedButton(
 //    var selectedIndex by remember { mutableIntStateOf(0) }
 //    val options = listOf( "Map", "List")
 
-    SingleChoiceSegmentedButtonRow (
+    SingleChoiceSegmentedButtonRow(
         modifier = Modifier
             .fillMaxWidth()
     ) {
 //        Ues forEachIndexed because they need to know index to know which button
         options.forEachIndexed { index, label ->
 
-            SegmentedButton(   shape = SegmentedButtonDefaults.itemShape(
-                index = index,
-                count = options.size
-            ),
+            SegmentedButton(
+                shape = SegmentedButtonDefaults.itemShape(
+                    index = index,
+                    count = options.size
+                ),
                 onClick = { onSelectedIndexChange(index) },
                 selected = index == selectedIndex,
                 colors = SegmentedButtonDefaults.colors(
@@ -62,7 +63,7 @@ fun SingleChoiceSegmentedButton(
                             horizontal = 20.dp,
                             vertical = 10.dp
                         )
-                        )
+                    )
 
 
                 }
@@ -78,6 +79,9 @@ fun SingleChoiceSegmentedButtonPreview() {
         val options = listOf("Map", "List")
         var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
-        SingleChoiceSegmentedButton(options,selectedIndex, onSelectedIndexChange = { println("clicked")} )
+        SingleChoiceSegmentedButton(
+            options,
+            selectedIndex,
+            onSelectedIndexChange = { println("clicked") })
     }
 }

@@ -29,11 +29,11 @@ import com.example.plentifood.ui.screens.home.HomeViewModel
 
 
 @Composable
-fun Home (
+fun Home(
     modifier: Modifier = Modifier,
     onBeginClick: () -> Unit,
     viewModel: HomeViewModel = viewModel()
-    ) {
+) {
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -41,9 +41,10 @@ fun Home (
         CircularProgressIndicator()
     } else {
 
-        Column(modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(24.dp),
             verticalArrangement = Arrangement.SpaceAround
         ) {
 
@@ -52,7 +53,8 @@ fun Home (
             Spacer(modifier = Modifier.height(24.dp))
 
 
-            Text("Welcome to the PlentiFood",
+            Text(
+                "Welcome to the PlentiFood",
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -71,10 +73,11 @@ fun Home (
             Column {
                 PrimaryButton("Lets begin", onClick = onBeginClick)
                 Spacer(modifier = Modifier.height(14.dp))
-                SecondaryButton("Staff Login", onClick = {} )
+                SecondaryButton("Staff Login", onClick = {})
             }
 
-            Text("Don't have a staff account as a staff? Sign up",
+            Text(
+                "Don't have a staff account as a staff? Sign up",
                 modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Center

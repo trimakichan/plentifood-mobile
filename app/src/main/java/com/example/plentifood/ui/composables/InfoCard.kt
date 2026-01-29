@@ -1,11 +1,16 @@
 package com.example.plentifood.ui.composables
 
+import android.R
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,25 +25,42 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.room.util.TableInfo
+import com.example.plentifood.data.models.site.Site
 import com.example.plentifood.ui.theme.PlentifoodTheme
+import com.example.plentifood.ui.utils.toTitleFromSnakeCase
 
 @Composable
-fun InfoCard(modifier: Modifier) {
-    Row (
+fun InfoCard(modifier: Modifier, site: Site) {
+
+    val services = site.services.map { it.name.toTitleFromSnakeCase() }
+    val serviceNames = services.joinToString()
+
+    val orgImage = when (site.organizationType) {
+        "food_bank" -> com.example.plentifood.R.drawable.foodbank
+        "non_profit" -> com.example.plentifood.R.drawable.nonprofit
+        "church" -> com.example.plentifood.R.drawable.church
+        else -> com.example.plentifood.R.drawable.others
+    }
+
+    Row(
         modifier = modifier
             .fillMaxWidth(0.95f)
-            .height(114.dp)
+            .height(130.dp)
+            .border(
+                BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
+                RoundedCornerShape(12.dp)
+            )
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)
             .padding(12.dp),
-
         verticalAlignment = Alignment.CenterVertically
-
 
     ) {
 
@@ -46,26 +68,34 @@ fun InfoCard(modifier: Modifier) {
             modifier = Modifier
                 .size(64.dp) // width & height
                 .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.onSurface),
+//                .background(MaterialTheme.colorScheme.onSurface),
         ) {
-            Text("Image")
+            Image(
+                painter = painterResource(orgImage),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
         }
 
         Spacer(Modifier.width(12.dp))
-        Column (
+        Column(
             modifier = Modifier
                 .weight(1f)
         ) {
             Text(
-                "SODO Community Market",
+                site.name,
                 style = MaterialTheme.typography.bodyMedium
-                )
+            )
             Text(
-                "SODO Community Market",
+                "Service Type: $serviceNames",
                 style = MaterialTheme.typography.bodySmall
-                )
+            )
+
             Text(
-                "SODO Community Market",
+                "Phone: ${site.phone}",
                 style = MaterialTheme.typography.labelSmall
             )
 
@@ -75,17 +105,16 @@ fun InfoCard(modifier: Modifier) {
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(
                     horizontal = 12.dp,
-                    vertical = 4.dp)
+                    vertical = 4.dp
+                )
 
-                ){
+            ) {
                 Text(
                     "Details",
                     textAlign = TextAlign.Center
-                    )
+                )
             }
         }
-
-
 
 
     }

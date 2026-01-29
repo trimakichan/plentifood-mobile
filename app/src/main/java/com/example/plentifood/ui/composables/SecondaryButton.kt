@@ -16,20 +16,23 @@ import androidx.compose.ui.unit.sp
 import com.example.plentifood.ui.theme.PlentifoodTheme
 
 @Composable
-fun SecondaryButton (title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    OutlinedButton (onClick = { onClick() },
+fun SecondaryButton(title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = { onClick() },
         modifier = Modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
-        contentPadding = PaddingValues(   horizontal = 24.dp, vertical = 14.dp ),
+        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 14.dp),
         colors = ButtonDefaults.elevatedButtonColors(
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.primary
         ),
     ) {
-        Text(title,
-            fontSize = 18.sp)
+        Text(
+            title,
+            fontSize = 18.sp
+        )
     }
 }
 

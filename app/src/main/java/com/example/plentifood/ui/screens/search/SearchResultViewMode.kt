@@ -10,7 +10,7 @@ import com.example.plentifood.data.models.site.NearbySitesResponse
 import com.example.plentifood.data.models.site.Site
 import kotlinx.coroutines.launch
 
-class SearchResultViewMode: ViewModel() {
+class SearchResultViewMode : ViewModel() {
     var query by mutableStateOf("")
         private set
 
@@ -37,6 +37,7 @@ class SearchResultViewMode: ViewModel() {
             try {
                 isLoading = true
                 val response = repository.getNearbySites(lat, lon, radiusMiles)
+
                 sites = response.results
                 totalResults = response.totalResults
 
