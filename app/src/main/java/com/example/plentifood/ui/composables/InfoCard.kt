@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,17 +28,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.room.util.TableInfo
 import com.example.plentifood.data.models.site.Site
+import com.example.plentifood.navigation.Route
 import com.example.plentifood.ui.theme.PlentifoodTheme
 import com.example.plentifood.ui.utils.toTitleFromSnakeCase
 
 @Composable
-fun InfoCard(modifier: Modifier, site: Site) {
+fun InfoCard(
+    modifier: Modifier,
+    site: Site,
+    onClickSiteDetail: (Int) -> Unit
+    ) {
 
     val services = site.services.map { it.name.toTitleFromSnakeCase() }
     val serviceNames = services.joinToString()
@@ -52,6 +59,7 @@ fun InfoCard(modifier: Modifier, site: Site) {
     Row(
         modifier = modifier
             .fillMaxWidth(0.95f)
+            .clickable { onClickSiteDetail(site.id) }
             .height(130.dp)
             .border(
                 BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
@@ -60,7 +68,8 @@ fun InfoCard(modifier: Modifier, site: Site) {
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)
             .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+
+        verticalAlignment = Alignment.CenterVertically,
 
     ) {
 

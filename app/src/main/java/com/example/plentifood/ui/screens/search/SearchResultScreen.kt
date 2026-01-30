@@ -1,6 +1,5 @@
 package com.example.plentifood.ui.screens.search
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +37,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.plentifood.data.models.site.Site
@@ -66,7 +64,8 @@ import androidx.compose.ui.text.withStyle
 fun SearchResultScreen(
     modifier: Modifier = Modifier,
 //    ViewModel() will keep the previous changes even after configuration gets updated.
-    viewModel: SearchResultViewMode = viewModel()
+    viewModel: SearchResultViewModel = viewModel(),
+    onClickSiteDetail: (Int) -> Unit
 ) {
     val query = viewModel.query
     val options = listOf("Map", "List")
@@ -238,7 +237,8 @@ fun SearchResultScreen(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .padding(bottom = 16.dp),
-                                site = site
+                                site = site,
+                                onClickSiteDetail = { onClickSiteDetail(site.id) }
                             )
                         }
                     }
@@ -254,7 +254,11 @@ fun SearchResultScreen(
 
                 ) {
                     items(sites) { site ->
-                        InfoCard(modifier = Modifier, site)
+                        InfoCard(
+                            modifier = Modifier,
+                            site,
+                            onClickSiteDetail = { onClickSiteDetail(site.id) }
+                        )
                     }
                 }
             }
@@ -319,7 +323,9 @@ fun MapScreen(
 @Composable
 fun SearchResultScreenPreview() {
     PlentifoodTheme {
-        SearchResultScreen()
+        SearchResultScreen(
+            onClickSiteDetail = {}
+        )
     }
 }
 

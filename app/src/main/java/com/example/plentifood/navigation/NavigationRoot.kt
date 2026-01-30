@@ -4,12 +4,15 @@ package com.example.plentifood.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.example.plentifood.data.models.site.Site
 import com.example.plentifood.ui.screens.home.Home
 import com.example.plentifood.ui.screens.TodoDetailScreen
 import com.example.plentifood.ui.screens.TodoListScreen
 import com.example.plentifood.ui.screens.search.SearchResultScreen
+import com.example.plentifood.ui.screens.site.SiteDetailScreen
 
 
 @Composable
@@ -34,11 +37,19 @@ fun NavigationRoot(
 
                 is Route.SearchResult -> {
                     NavEntry(key) {
-                        SearchResultScreen()
+                        SearchResultScreen(
+                            onClickSiteDetail = {
+                                backStack.add(Route.SiteDetail(it))
+                            }
+                        )
                     }
                 }
 
-
+                is Route.SiteDetail -> {
+                    NavEntry(key){
+                        SiteDetailScreen(siteId = key.siteId)
+                    }
+                }
 
                 is Route.TodoList -> {
                     NavEntry(key) {

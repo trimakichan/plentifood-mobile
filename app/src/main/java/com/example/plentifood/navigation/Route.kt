@@ -1,6 +1,7 @@
 package com.example.plentifood.navigation
 
 import androidx.navigation3.runtime.NavKey
+import com.example.plentifood.data.models.site.Site
 import kotlinx.serialization.Serializable
 
 // seals means only a fixed, known set of types is allowed.
@@ -19,6 +20,9 @@ sealed interface Route: NavKey {
 
     @Serializable
     data class TodoDetail(val todo:String): Route, NavKey
+
+    @Serializable
+    data class SiteDetail(val siteId: Int): Route, NavKey
 
 
 }

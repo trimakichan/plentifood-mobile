@@ -3,7 +3,7 @@ package com.example.plentifood.data.api
 import com.example.plentifood.data.models.site.NearbySitesResponse
 import com.example.plentifood.data.models.site.Site
 
-class SiteRepository {
+class NearbySiteRepository {
     suspend fun getNearbySites(
         lat: Double,
         lon: Double,
@@ -13,6 +13,15 @@ class SiteRepository {
             lat,
             lon,
             radiusMiles
+        )
+    }
+}
+class SiteRepository {
+    suspend fun getSite(
+        siteId: Int
+    ): Site {
+        return RetrofitInstance.api.getSite(
+            siteId
         )
     }
 }
