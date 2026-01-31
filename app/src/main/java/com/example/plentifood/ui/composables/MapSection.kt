@@ -1,7 +1,6 @@
 package com.example.plentifood.ui.composables
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.plentifood.data.models.site.Site
@@ -68,13 +67,18 @@ fun MapSection(
         )
 
         sites.forEach { site ->
+            val isSelected = selectedSite?.id == site.id
             val position = LatLng(site.latitude, site.longitude)
 
-            val hue = when (site.organizationType) {
-                "food_bank" -> BitmapDescriptorFactory.HUE_ORANGE
-                "church" -> BitmapDescriptorFactory.HUE_ROSE
-                "non_profit" -> BitmapDescriptorFactory.HUE_VIOLET
-                else -> BitmapDescriptorFactory.HUE_AZURE
+            val hue = if (isSelected) {
+                BitmapDescriptorFactory.HUE_ROSE
+            } else {
+                when (site.organizationType) {
+                    "food_bank" -> BitmapDescriptorFactory.HUE_ORANGE
+                    "church" -> BitmapDescriptorFactory.HUE_CYAN
+                    "non_profit" -> BitmapDescriptorFactory.HUE_VIOLET
+                    else -> BitmapDescriptorFactory.HUE_AZURE
+                }
             }
             Marker(
                 state = MarkerState(position),
@@ -86,7 +90,6 @@ fun MapSection(
                 onClick = {
                     onSiteSelected(site)
                     focusOnSite(site)
-
                     true
                 }
             )

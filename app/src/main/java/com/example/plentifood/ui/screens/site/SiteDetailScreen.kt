@@ -1,7 +1,6 @@
 package com.example.plentifood.ui.screens.site
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Directions
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.PermIdentity
@@ -29,6 +30,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,11 +45,13 @@ import com.example.plentifood.R
 import com.example.plentifood.ui.composables.MapSection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.net.toUri
-import com.example.plentifood.data.models.site.HourSlot
 import com.example.plentifood.data.models.site.Hours
 import com.example.plentifood.data.models.site.Site
 import com.example.plentifood.ui.composables.Label
+import com.example.plentifood.ui.utils.toTitleFromSnakeCase
+import android.net.Uri
 
 
 @Composable
@@ -87,128 +91,150 @@ fun SiteDetailScreen(
         ) { CircularProgressIndicator() }
 
     } else {
-
-        Column {
-            site?.let { site ->
-
-                Box {
-                    MapSection(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp),
-                        sites = listOf(site),
-                        selectedSite = site,
-                        onSiteSelected = {}
-                    )
-
-                    Icon(
-                        painter = painterResource(R.drawable.back),
-                        contentDescription = "Go Back Icon",
-                        modifier = Modifier
-                            .clickable { onClickBack() }
-                            .padding(14.dp)
-                            .clip(RoundedCornerShape(50.dp))
-                            .background(MaterialTheme.colorScheme.surface)
-                            .padding(6.dp)
-                            .size(32.dp),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                }
-
-                HorizontalDivider()
-
+        site?.let { site ->
+            Box(modifier = Modifier.fillMaxSize()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(12.dp)
-                        .verticalScroll(scrollState),
+                ) {
 
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                )
-                {
 
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-
-                    ) {
-                        Text(
-                            site.name,
-                            style = MaterialTheme.typography.titleMedium,
+                    Box {
+                        MapSection(
                             modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp),
+                            sites = listOf(site),
+                            selectedSite = site,
+                            onSiteSelected = {}
                         )
 
-                        site.organizationWebsiteUrl?.let {
-                            Icon(
-                                imageVector = Icons.Outlined.Language,
-                                contentDescription = "Website Link",
+                        Icon(
+                            painter = painterResource(R.drawable.back),
+                            contentDescription = "Go Back Icon",
+                            modifier = Modifier
+                                .clickable { onClickBack() }
+                                .padding(14.dp)
+                                .clip(RoundedCornerShape(50.dp))
+                                .background(MaterialTheme.colorScheme.surface)
+                                .padding(6.dp)
+                                .size(32.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+
+                    HorizontalDivider()
+
+                    Column(
+                        modifier = Modifier
+//                        .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                            .verticalScroll(scrollState)
+                            .padding(32.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    )
+                    {
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+
+                        ) {
+                            Text(
+                                site.name,
+                                style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier
-                                    .size(32.dp)
-                                    .clickable {
-                                        val intent = Intent(Intent.ACTION_VIEW, it.toUri())
-                                        context.startActivity(intent)
-                                    },
-                                tint = MaterialTheme.colorScheme.primary
                             )
+
+                            site.organizationWebsiteUrl?.let {
+                                Icon(
+                                    imageVector = Icons.Outlined.Language,
+                                    contentDescription = "Website Link",
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .clickable {
+                                            val intent = Intent(Intent.ACTION_VIEW, it.toUri())
+                                            context.startActivity(intent)
+                                        },
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+
                         }
+
+
+                        InfoRow(
+                            Icons.Outlined.Settings,
+                            "Services",
+                            site.services.map { it.name },
+                            badge = true
+                        )
+                        InfoRow(
+                            Icons.Outlined.PermIdentity,
+                            "Eligibility",
+                            listOf(site.eligibility),
+                            badge = true
+                        )
+
+                        InfoRow(
+                            Icons.Outlined.LocationOn,
+                            "Address",
+                            cleanAddress(site)
+                        )
+
+                        InfoRow(
+                            Icons.Outlined.PhoneInTalk,
+                            "Phone",
+                            listOf(site.phone),
+                        )
+
+                        HoursRow(
+                            Icons.Outlined.WatchLater,
+                            "Hours",
+                            site.hours
+                        )
+
+
+                        Text(
+                            "Notes: ",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                        Text(
+                            site.serviceNotes,
+                            style = MaterialTheme.typography.bodyMedium
+
+                        )
 
                     }
 
 
-                    InfoRow(
-                        Icons.Outlined.Settings,
-                        "Services",
-                        site.services.map { it.name },
-                        badge = true
-                    )
-                    InfoRow(
-                        Icons.Outlined.PermIdentity,
-                        "Eligibility",
-                        listOf(site.eligibility),
-                        badge = true
-                    )
-
-                    InfoRow(
-                        Icons.Outlined.LocationOn,
-                        "Address",
-                        cleanAddress(site)
-                    )
-
-                    InfoRow(
-                        Icons.Outlined.PhoneInTalk,
-                        "Phone",
-                        listOf(site.phone),
-                    )
-
-                    HoursRow(
-                        Icons.Outlined.WatchLater,
-                        "Hours",
-                        site.hours
-                    )
-
-
-                    Text(
-                        "Notes: ",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyLarge,
-                        )
-                    Text(
-                        site.serviceNotes,
-                        style = MaterialTheme.typography.bodyMedium
-
-                    )
-
-
                 }
 
+                DirectionButton(
+                    onClick = {
+                        val uri = "google.navigation:q=${site.latitude},${site.longitude}".toUri()
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
 
+                        // Force Google Maps if installed (optional)
+                        intent.setPackage("com.google.android.apps.maps")
+
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .navigationBarsPadding()
+                        .padding(16.dp)
+                )
             }
 
         }
+
+
     }
 }
+
 
 
 @Composable
@@ -244,7 +270,7 @@ fun InfoRow(
 
         if (badge) {
             values.forEach { value ->
-                Label(value)
+                Label(value.toTitleFromSnakeCase())
                 Spacer(modifier = Modifier.width(8.dp))
             }
         } else {
@@ -331,6 +357,22 @@ fun HoursRow(
 
     }
 }
+
+@Composable
+fun DirectionButton(onClick: () -> Unit, modifier: Modifier) {
+
+    SmallFloatingActionButton(
+        onClick = {
+            onClick()
+        },
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.surface
+    ) {
+        Icon(Icons.Filled.Directions, "Get Direction")
+    }
+}
+
 
 
 
