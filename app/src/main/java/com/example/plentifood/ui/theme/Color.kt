@@ -12,9 +12,11 @@ val Pink40 = Color(0xFF7D5260)
 
 
 // Light / primary tones
-val Orange80 = Color(0xFFFF8F00)   // primary
-val Orange70 = Color(0x10FF8F00)   // 10% alpha
-val Orange60 = Color(0x05FF8F00)   // 5% alpha
+val Orange80 = Color(0xFFFF8F00)
+// primary
+val Orange20 = Color(0x20FF8F00)
+val Orange40 = Color(0x10FF8F00)   // 10% alpha
+//val Orange30 = Color(0x05FF8F00)   // 5% alpha
 
 // Dark / neutral tones
 val Black80 = Color(0xFF191D31)

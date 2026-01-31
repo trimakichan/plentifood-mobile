@@ -44,7 +44,7 @@ fun InfoCard(
     modifier: Modifier,
     site: Site,
     onClickSiteDetail: (Int) -> Unit
-    ) {
+) {
 
     val services = site.services.map { it.name.toTitleFromSnakeCase() }
     val serviceNames = services.joinToString()
@@ -71,7 +71,7 @@ fun InfoCard(
 
         verticalAlignment = Alignment.CenterVertically,
 
-    ) {
+        ) {
 
         Box(
             modifier = Modifier

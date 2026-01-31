@@ -43,20 +43,12 @@ import com.example.plentifood.data.models.site.Site
 import com.example.plentifood.ui.composables.InfoCard
 import com.example.plentifood.ui.composables.SingleChoiceSegmentedButton
 import com.example.plentifood.ui.theme.PlentifoodTheme
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberUpdatedMarkerState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-
+import com.example.plentifood.ui.composables.MapSection
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,7 +68,7 @@ fun SearchResultScreen(
     val totalResults = viewModel.totalResults
     val sites = viewModel.sites
 
-    var selectedSite by remember { mutableStateOf<Site?>(null)}
+    var selectedSite by remember { mutableStateOf<Site?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.fetchNearbySites(47.6204, -122.3494, 5)
@@ -211,7 +203,6 @@ fun SearchResultScreen(
 
         when (options[selectedIndex]) {
             "Map" ->
-
                 if (isLoading) {
                     Box(
                         modifier = Modifier
@@ -221,7 +212,7 @@ fun SearchResultScreen(
 
                 } else {
                     Box {
-                        MapScreen(
+                        MapSection(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight(),
@@ -234,9 +225,9 @@ fun SearchResultScreen(
 
                         selectedSite?.let { site ->
                             InfoCard(
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = 16.dp),
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(bottom = 16.dp),
                                 site = site,
                                 onClickSiteDetail = { onClickSiteDetail(site.id) }
                             )
@@ -265,57 +256,6 @@ fun SearchResultScreen(
         }
     }
 
-}
-
-@Composable
-fun MapScreen(
-    modifier: Modifier,
-    sites: List<Site>,
-    selectedSite: Site?,
-    onSiteSelected: (Site?) -> Unit
-)
-{
-    val userLocation = LatLng(47.6062, -122.3321)
-    val userMarkerState = rememberUpdatedMarkerState(userLocation)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(userLocation, 14f)
-    }
-    GoogleMap(
-        modifier = modifier,
-        cameraPositionState = cameraPositionState,
-        onMapClick = { onSiteSelected(null)}
-    ) {
-
-        Marker(
-            state = userMarkerState,
-            title = "Your Current Location",
-            snippet = "Marker in Seattle",
-            onClick = { true }
-        )
-
-        sites.forEach { site ->
-            val position = LatLng(site.latitude, site.longitude)
-
-            val hue = when (site.organizationType) {
-                "food_bank" -> BitmapDescriptorFactory.HUE_ORANGE
-                "church" -> BitmapDescriptorFactory.HUE_ROSE
-                "non_profit" -> BitmapDescriptorFactory.HUE_VIOLET
-                else -> BitmapDescriptorFactory.HUE_AZURE
-            }
-            Marker(
-                state = MarkerState(position),
-                title = site.name,
-                snippet = site.city,
-                icon = BitmapDescriptorFactory.defaultMarker(
-                    hue
-                ),
-                onClick = {
-                            onSiteSelected(site)
-                            true
-                }
-            )
-        }
-    }
 }
 
 

@@ -77,6 +77,11 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
+    // Location Permissions
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation(libs.androidx.compose.animation.core)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

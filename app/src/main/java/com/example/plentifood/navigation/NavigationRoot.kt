@@ -47,7 +47,10 @@ fun NavigationRoot(
 
                 is Route.SiteDetail -> {
                     NavEntry(key){
-                        SiteDetailScreen(siteId = key.siteId)
+                        SiteDetailScreen(
+                            siteId = key.siteId,
+                            onClickBack = { backStack.removeLastOrNull() }
+                        )
                     }
                 }
 
