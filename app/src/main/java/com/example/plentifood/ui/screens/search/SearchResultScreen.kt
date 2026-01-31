@@ -57,7 +57,8 @@ fun SearchResultScreen(
     modifier: Modifier = Modifier,
 //    ViewModel() will keep the previous changes even after configuration gets updated.
     viewModel: SearchResultViewModel = viewModel(),
-    onClickSiteDetail: (Int) -> Unit
+    onClickSiteDetail: (Int) -> Unit,
+    onClickFilterButton: () -> Unit
 ) {
     val query = viewModel.query
     val options = listOf("Map", "List")
@@ -67,8 +68,10 @@ fun SearchResultScreen(
     val isLoading = viewModel.isLoading
     val totalResults = viewModel.totalResults
     val sites = viewModel.sites
-
     var selectedSite by remember { mutableStateOf<Site?>(null) }
+
+    val numOfFilters = viewModel.numOfFilters.toString()
+
 
     LaunchedEffect(Unit) {
         viewModel.fetchNearbySites(47.6204, -122.3494, 5)
@@ -112,9 +115,7 @@ fun SearchResultScreen(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 IconButton(
-                    onClick = {
-
-                    }
+                    onClick = { onClickFilterButton() }
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Tune,
@@ -158,7 +159,7 @@ fun SearchResultScreen(
                                     fontWeight = FontWeight.Bold
                                 )
                             ) {
-                                append("3")
+                                append(numOfFilters)
                             }
 
                             append(" Filters")
@@ -264,7 +265,8 @@ fun SearchResultScreen(
 fun SearchResultScreenPreview() {
     PlentifoodTheme {
         SearchResultScreen(
-            onClickSiteDetail = {}
+            onClickSiteDetail = {},
+            onClickFilterButton = {}
         )
     }
 }

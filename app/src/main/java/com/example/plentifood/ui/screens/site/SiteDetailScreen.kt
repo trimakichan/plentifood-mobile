@@ -19,7 +19,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Directions
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.PermIdentity
@@ -30,7 +29,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,14 +42,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.plentifood.R
 import com.example.plentifood.ui.composables.MapSection
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.net.toUri
 import com.example.plentifood.data.models.site.Hours
 import com.example.plentifood.data.models.site.Site
-import com.example.plentifood.ui.composables.Label
-import com.example.plentifood.ui.utils.toTitleFromSnakeCase
-import android.net.Uri
+import com.example.plentifood.ui.composables.DirectionButton
+import com.example.plentifood.ui.composables.HoursRow
+import com.example.plentifood.ui.composables.InfoRow
 
 
 @Composable
@@ -216,10 +212,8 @@ fun SiteDetailScreen(
                     onClick = {
                         val uri = "google.navigation:q=${site.latitude},${site.longitude}".toUri()
                         val intent = Intent(Intent.ACTION_VIEW, uri)
-
                         // Force Google Maps if installed (optional)
                         intent.setPackage("com.google.android.apps.maps")
-
                         context.startActivity(intent)
                     },
                     modifier = Modifier
@@ -237,141 +231,8 @@ fun SiteDetailScreen(
 
 
 
-@Composable
-fun InfoRow(
-    icon: ImageVector,
-    label: String,
-    values: List<String>,
-    badge: Boolean = false
-) {
-
-    val alignment: Alignment.Vertical =
-        if (label == "Address") Alignment.Top else Alignment.CenterVertically
-
-    Row(
-        verticalAlignment = alignment,
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-
-        Icon(
-            imageVector = icon,
-            contentDescription = "Icon",
-            tint = MaterialTheme.colorScheme.onSurface
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(
-            "$label: ",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-
-        if (badge) {
-            values.forEach { value ->
-                Label(value.toTitleFromSnakeCase())
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-        } else {
-            Text(
-                values.joinToString(),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-
-}
-
-@Composable
-fun HoursRow(
-    icon: ImageVector,
-    label: String,
-    values: Hours,
-) {
-    val days = listOf(
-        "Monday" to values.monday,
-        "Tuesday" to values.tuesday,
-        "Wednesday" to values.wednesday,
-        "Thursday" to values.thursday,
-        "Friday" to values.friday,
-        "Saturday" to values.saturday,
-        "Sunday" to values.sunday
-    )
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = "Icon",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                "$label: ",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-
-        days.forEach { (day, slots) ->
-            val hoursText = if (slots.isEmpty()) {
-                "Closed"
-            } else {
-                slots.joinToString(", ") { slot ->
-                    "${slot.open} - ${slot.close}"
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 40.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-
-            ) {
-
-                Text(
-                    "$day: ",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Text(
-                    hoursText,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
 
 
-    }
-}
-
-@Composable
-fun DirectionButton(onClick: () -> Unit, modifier: Modifier) {
-
-    SmallFloatingActionButton(
-        onClick = {
-            onClick()
-        },
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.surface
-    ) {
-        Icon(Icons.Filled.Directions, "Get Direction")
-    }
-}
 
 
 

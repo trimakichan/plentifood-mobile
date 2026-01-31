@@ -1,6 +1,7 @@
 package com.example.plentifood.ui.screens.search
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,8 @@ import kotlinx.coroutines.launch
 class SearchResultViewModel : ViewModel() {
     var query by mutableStateOf("")
         private set
+
+    var numOfFilters by mutableIntStateOf(0)
 
     private val repository = NearbySiteRepository()
 

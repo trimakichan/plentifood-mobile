@@ -11,6 +11,7 @@ import com.example.plentifood.data.models.site.Site
 import com.example.plentifood.ui.screens.home.Home
 import com.example.plentifood.ui.screens.TodoDetailScreen
 import com.example.plentifood.ui.screens.TodoListScreen
+import com.example.plentifood.ui.screens.filters.FilterScreen
 import com.example.plentifood.ui.screens.search.SearchResultScreen
 import com.example.plentifood.ui.screens.site.SiteDetailScreen
 
@@ -40,7 +41,18 @@ fun NavigationRoot(
                         SearchResultScreen(
                             onClickSiteDetail = {
                                 backStack.add(Route.SiteDetail(it))
+                            },
+                            onClickFilterButton = {
+                                backStack.add(Route.Filter)
                             }
+                        )
+                    }
+                }
+
+                is Route.Filter -> {
+                    NavEntry(key) {
+                        FilterScreen(
+                            onClickBack = { backStack.removeLastOrNull() }
                         )
                     }
                 }

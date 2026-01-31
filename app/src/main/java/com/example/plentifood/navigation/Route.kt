@@ -16,6 +16,9 @@ sealed interface Route: NavKey {
     data object SearchResult: Route, NavKey
 
     @Serializable
+    data object Filter: Route, NavKey
+
+    @Serializable
     data object TodoList: Route, NavKey
 
     @Serializable
