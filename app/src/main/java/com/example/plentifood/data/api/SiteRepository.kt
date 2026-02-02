@@ -7,12 +7,20 @@ class NearbySiteRepository {
     suspend fun getNearbySites(
         lat: Double,
         lon: Double,
-        radiusMiles: Int
+        radiusMiles: Int,
+        day: List<String>?= null,
+        organizationType: List<String>? = null,
+        service: List<String>? = null,
     ): NearbySitesResponse {
+        println("FETCH with days=$day orgTypes=$organizationType service=$service")
+
         return RetrofitInstance.api.getNearbySites(
             lat,
             lon,
-            radiusMiles
+            radiusMiles,
+            day,
+            organizationType,
+            service
         )
     }
 }

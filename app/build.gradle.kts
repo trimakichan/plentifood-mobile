@@ -82,6 +82,8 @@ dependencies {
     // Location Permissions
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation(libs.androidx.compose.animation.core)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.compose.runtime)
 //    implementation(libs.compose.material3)
 //    implementation(libs.androidx.material3)
 

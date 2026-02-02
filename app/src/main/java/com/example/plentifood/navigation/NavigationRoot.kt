@@ -3,6 +3,7 @@ package com.example.plentifood.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -13,7 +14,9 @@ import com.example.plentifood.ui.screens.TodoDetailScreen
 import com.example.plentifood.ui.screens.TodoListScreen
 import com.example.plentifood.ui.screens.filters.FilterScreen
 import com.example.plentifood.ui.screens.search.SearchResultScreen
+import com.example.plentifood.ui.screens.search.SearchResultViewModel
 import com.example.plentifood.ui.screens.site.SiteDetailScreen
+import com.example.plentifood.ui.screens.filters.FilterViewModel
 
 
 @Composable
@@ -21,6 +24,9 @@ fun NavigationRoot(
     modifier: Modifier = Modifier
 ) {
     val backStack = rememberNavBackStack(Route.Home)
+    val searchResultViewModel: SearchResultViewModel = viewModel()
+    val filterViewModel: FilterViewModel = viewModel()
+
 
     NavDisplay(
         modifier = modifier,
@@ -39,6 +45,7 @@ fun NavigationRoot(
                 is Route.SearchResult -> {
                     NavEntry(key) {
                         SearchResultScreen(
+                            viewModel = searchResultViewModel,
                             onClickSiteDetail = {
                                 backStack.add(Route.SiteDetail(it))
                             },
@@ -52,6 +59,8 @@ fun NavigationRoot(
                 is Route.Filter -> {
                     NavEntry(key) {
                         FilterScreen(
+                            searchViewModel = searchResultViewModel,
+                            filterViewModel = filterViewModel,
                             onClickBack = { backStack.removeLastOrNull() }
                         )
                     }

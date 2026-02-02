@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,7 +49,11 @@ fun Home(
             verticalArrangement = Arrangement.SpaceAround
         ) {
 
-            Text("Logo")
+            Text("PlentiFood",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+                )
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -71,13 +76,13 @@ fun Home(
             )
 
             Column {
-                PrimaryButton("Lets begin", onClick = onBeginClick)
+                PrimaryButton("Let's begin", onButtonClick = onBeginClick)
                 Spacer(modifier = Modifier.height(14.dp))
-                SecondaryButton("Staff Login", onClick = {})
+                SecondaryButton("Staff Login", onButtonClick = {})
             }
 
             Text(
-                "Don't have a staff account as a staff? Sign up",
+                "Don't have a staff account? Sign up",
                 modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Center

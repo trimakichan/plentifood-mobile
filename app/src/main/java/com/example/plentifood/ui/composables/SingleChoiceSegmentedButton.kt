@@ -27,9 +27,6 @@ fun SingleChoiceSegmentedButton(
     onSelectedIndexChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-//    var selectedIndex by remember { mutableIntStateOf(0) }
-//    val options = listOf( "Map", "List")
-
     SingleChoiceSegmentedButtonRow(
         modifier = Modifier
             .fillMaxWidth()

@@ -1,5 +1,7 @@
 package com.example.plentifood.ui.screens.search
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +46,10 @@ import com.example.plentifood.ui.composables.InfoCard
 import com.example.plentifood.ui.composables.SingleChoiceSegmentedButton
 import com.example.plentifood.ui.theme.PlentifoodTheme
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material3.ContainedLoadingIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -51,16 +57,16 @@ import androidx.compose.ui.text.withStyle
 import com.example.plentifood.ui.composables.MapSection
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SearchResultScreen(
     modifier: Modifier = Modifier,
 //    ViewModel() will keep the previous changes even after configuration gets updated.
     viewModel: SearchResultViewModel = viewModel(),
     onClickSiteDetail: (Int) -> Unit,
-    onClickFilterButton: () -> Unit
+    onClickFilterButton: () -> Unit,
 ) {
-    val query = viewModel.query
+    val searchQuery = viewModel.searchQuery
     val options = listOf("Map", "List")
 //    use rememberSaveable to keep the values during configuration changes.
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
@@ -72,13 +78,21 @@ fun SearchResultScreen(
 
     val numOfFilters = viewModel.numOfFilters.toString()
 
+    val lat = viewModel.lat
+    val lon = viewModel.lon
+    val radiusMiles = viewModel.radiusMiles
+    val days = viewModel.days.toList()
+    val organizationType = viewModel.organizationType.toList()
+    val serviceType = viewModel.serviceType
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchNearbySites(47.6204, -122.3494, 5)
-    }
-
-    LaunchedEffect(viewModel.sites) {
-        println("Results: $totalResults")
+    LaunchedEffect(lat, lon, radiusMiles, days, organizationType, serviceType) {
+        viewModel.fetchNearbySites(
+            lat = lat,
+            lon = lon,
+            radiusMiles = radiusMiles,
+            days = days,
+            organizationType = organizationType,
+            serviceType = serviceType)
     }
 
     Column(
@@ -96,7 +110,7 @@ fun SearchResultScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedTextField(
-                    value = query,
+                    value = searchQuery,
                     onValueChange = { newText ->
                         viewModel.onQueryChange(newText)
                     },
@@ -169,13 +183,12 @@ fun SearchResultScreen(
 
 
                     Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = null,
+                        imageVector = Icons.Filled.Cancel,
+                        contentDescription = "Cancel Icon",
                         modifier = Modifier
                             .padding(6.dp)
-                            .size(18.dp)
-                            .rotate(90f)
-
+                            .size(18.dp),
+                        tint = MaterialTheme.colorScheme.primary,
                     )
 
                 }
@@ -209,7 +222,11 @@ fun SearchResultScreen(
                         modifier = Modifier
                             .fillMaxSize(),
                         contentAlignment = Alignment.Center
-                    ) { CircularProgressIndicator() }
+                    ) { ContainedLoadingIndicator(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        indicatorColor = MaterialTheme.colorScheme.primary,
+                    )
+                    }
 
                 } else {
                     Box {

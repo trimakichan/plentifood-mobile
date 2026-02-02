@@ -33,7 +33,7 @@ fun MapSection(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             initialTarget,
-            14f
+            11f
         )
     }
 
@@ -71,10 +71,10 @@ fun MapSection(
             val position = LatLng(site.latitude, site.longitude)
 
             val hue = if (isSelected) {
-                BitmapDescriptorFactory.HUE_ROSE
+                BitmapDescriptorFactory.HUE_ORANGE
             } else {
                 when (site.organizationType) {
-                    "food_bank" -> BitmapDescriptorFactory.HUE_ORANGE
+                    "food_bank" -> BitmapDescriptorFactory.HUE_MAGENTA
                     "church" -> BitmapDescriptorFactory.HUE_CYAN
                     "non_profit" -> BitmapDescriptorFactory.HUE_VIOLET
                     else -> BitmapDescriptorFactory.HUE_AZURE

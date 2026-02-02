@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.room.util.TableInfo
@@ -53,6 +54,8 @@ fun InfoCard(
         "food_bank" -> com.example.plentifood.R.drawable.foodbank
         "non_profit" -> com.example.plentifood.R.drawable.nonprofit
         "church" -> com.example.plentifood.R.drawable.church
+        "community_center" -> com.example.plentifood.R.drawable.community
+        "others" -> com.example.plentifood.R.drawable.others
         else -> com.example.plentifood.R.drawable.others
     }
 
@@ -96,33 +99,35 @@ fun InfoCard(
         ) {
             Text(
                 site.name,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 "Service Type: $serviceNames",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodyMedium
             )
 
             Text(
                 "Phone: ${site.phone}",
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.bodySmall
             )
 
-            OutlinedButton(
-                onClick = {},
-                modifier = Modifier.align(Alignment.End),
-                shape = RoundedCornerShape(8.dp),
-                contentPadding = PaddingValues(
-                    horizontal = 12.dp,
-                    vertical = 4.dp
-                )
-
-            ) {
-                Text(
-                    "Details",
-                    textAlign = TextAlign.Center
-                )
-            }
+//            OutlinedButton(
+//                onClick = {},
+//                modifier = Modifier.align(Alignment.End),
+//                shape = RoundedCornerShape(8.dp),
+//                contentPadding = PaddingValues(
+//                    horizontal = 12.dp,
+//                    vertical = 4.dp
+//                )
+//
+//            ) {
+//                Text(
+//                    "Details",
+//                    textAlign = TextAlign.Center
+//                )
+//            }
         }
 
 

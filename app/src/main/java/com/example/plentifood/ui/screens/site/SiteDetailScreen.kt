@@ -26,6 +26,8 @@ import androidx.compose.material.icons.outlined.PhoneInTalk
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.WatchLater
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ContainedLoadingIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -50,6 +52,7 @@ import com.example.plentifood.ui.composables.HoursRow
 import com.example.plentifood.ui.composables.InfoRow
 
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SiteDetailScreen(
     siteId: Int,
@@ -84,7 +87,10 @@ fun SiteDetailScreen(
             modifier = Modifier
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
-        ) { CircularProgressIndicator() }
+        ) { ContainedLoadingIndicator(
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            indicatorColor = MaterialTheme.colorScheme.primary,
+        )}
 
     } else {
         site?.let { site ->

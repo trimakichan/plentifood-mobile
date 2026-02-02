@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.sp
 import com.example.plentifood.ui.theme.PlentifoodTheme
 
 @Composable
-fun SecondaryButton(title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun SecondaryButton(title: String, modifier: Modifier = Modifier, onButtonClick: () -> Unit) {
     OutlinedButton(
-        onClick = { onClick() },
+        onClick = { onButtonClick() },
         modifier = Modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
@@ -40,6 +40,6 @@ fun SecondaryButton(title: String, modifier: Modifier = Modifier, onClick: () ->
 @Composable
 fun SecondaryButton() {
     PlentifoodTheme {
-        PrimaryButton("Let's begin", onClick = {})
+        PrimaryButton("Let's begin", onButtonClick = {})
     }
 }
