@@ -72,7 +72,11 @@ fun FilterScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { onClickBack() }) {
+                    IconButton(onClick = {
+                        onClickBack()
+                        if (!filterViewModel.AreFiltersApplied) reset = true
+
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Go Back Icon"
@@ -204,12 +208,13 @@ fun ScrollContent(
             PrimaryButton(
                 "Apply Filters",
                 onButtonClick = {
-                    val numOfFilters = filterViewModel.dayChecked.count { it } + filterViewModel.orgChecked.count { it } + filterViewModel.serviceChecked.count { it }
-                    searchViewModel.onUpdateNumOfFilters(numOfFilters)
+                    searchViewModel.onUpdateNumOfFilters(filterViewModel.getNumOfFilters())
 //                  searchViewModel.onChangeRadius()
                     searchViewModel.onDaySelected(getSelectedItems(filterViewModel.dayOptions, filterViewModel.dayChecked))
                     searchViewModel.onOrganizationTypeSelected(getSelectedItems(filterViewModel.orgOptions, filterViewModel.orgChecked))
                     searchViewModel.onServiceSelected(getSelectedItems(filterViewModel.serviceOptions, filterViewModel.serviceChecked))
+
+                    filterViewModel.updateFiltersStatus(true)
 
                     onClickBack()
                 })

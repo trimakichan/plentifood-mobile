@@ -30,6 +30,9 @@ android {
 
         manifestPlaceholders["MAPS_API_KEY"] = mapsKey
 
+        buildConfigField("String", "MAPS_API_KEY", "\"$mapsKey\"")
+
+
 //        manifestPlaceholders["MAPS_API_KEY"] = project.findProperty("MAPS_API_KEY") ?: ""
     }
 
@@ -48,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -84,8 +88,12 @@ dependencies {
     implementation(libs.androidx.compose.animation.core)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.compose.runtime)
-//    implementation(libs.compose.material3)
-//    implementation(libs.androidx.material3)
+
+    implementation("com.google.android.libraries.places:places:5.0.0")
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.runtime.saveable)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

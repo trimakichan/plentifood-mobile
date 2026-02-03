@@ -1,5 +1,6 @@
 package com.example.plentifood
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,11 +13,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.plentifood.navigation.NavigationRoot
 import com.example.plentifood.ui.theme.PlentifoodTheme
+import com.google.android.libraries.places.api.Places
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
+
+        val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        val apiKey = appInfo.metaData.getString("com.google.android.geo.API_KEY")
+
+        println("Places.isInitialized() = ${Places.isInitialized()}")
+        println("apiKey2 = $apiKey")
+        if(!Places.isInitialized() && apiKey != null) {
+                Places.initializeWithNewPlacesApiEnabled(this,apiKey)
+            println("APIKEY $apiKey")
+            }
+
+
         setContent {
             PlentifoodTheme {
                 Scaffold { innerPadding ->
@@ -25,9 +38,7 @@ class MainActivity : ComponentActivity() {
                         .padding(innerPadding)
                     )
                 }
-//                Box(Modifier.safeDrawingPadding()) {
-//                    SearchResultScreen()
-//                }
+
             }
         }
     }

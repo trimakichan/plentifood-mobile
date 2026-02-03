@@ -22,9 +22,13 @@ fun MapSection(
     modifier: Modifier,
     sites: List<Site>,
     selectedSite: Site?,
-    onSiteSelected: (Site?) -> Unit
+    onSiteSelected: (Site?) -> Unit,
+    userLat: Double,
+    userLon: Double
 ) {
-    val userLocation = LatLng(47.6062, -122.3321)
+
+    println("LAT: $userLat, LON: $userLon")
+    val userLocation = LatLng(userLat, userLon)
     val userMarkerState = rememberUpdatedMarkerState(userLocation)
     val initialTarget = selectedSite?.let { site ->
         LatLng(site.latitude, site.longitude)
@@ -33,7 +37,7 @@ fun MapSection(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             initialTarget,
-            11f
+            12f
         )
     }
 
