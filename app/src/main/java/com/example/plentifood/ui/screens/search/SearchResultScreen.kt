@@ -1,6 +1,10 @@
 package com.example.plentifood.ui.screens.search
 
 
+import android.content.pm.PackageManager
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,8 +53,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat
 import com.example.plentifood.ui.composables.LocationSearchBar
 import com.example.plentifood.ui.composables.MapSection
+import com.google.android.gms.location.LocationServices
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 
@@ -69,6 +75,7 @@ fun SearchResultScreen(
     val predictions = viewModel.predictions
     val onSearchQueryChange = viewModel::onSearchQueryChange
     val fetchPredictions = viewModel::fetchPredictions
+    val updateCoordinates = viewModel::updateCoordinates
     val context = LocalContext.current
     val placesClient: PlacesClient? = remember {
         val isPreview = false
@@ -77,6 +84,35 @@ fun SearchResultScreen(
     var closeExpanded by rememberSaveable { mutableStateOf(false) }
     var searchBarExpanded = searchQuery.length >= 3 && predictions.isNotEmpty() && !closeExpanded
 
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+
+    // Handle permission requests for accessing fine location
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Fetch the user's location and update the camera if permission is granted
+            viewModel.fetchUserLocation(context, fusedLocationClient)
+        } else {
+            // Handle the case when permission is denied
+            Log.e("Search Result","Location permission was denied by the user.")
+        }
+    }
+
+// Request the location permission when the composable is launched
+    LaunchedEffect(Unit) {
+        when (PackageManager.PERMISSION_GRANTED) {
+            // Check if the location permission is already granted
+            ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                // Fetch the user's location and update the camera
+                viewModel.fetchUserLocation(context, fusedLocationClient)
+            }
+            else -> {
+                // Request the location permission if it has not been granted
+                permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
+    }
 
     val options = listOf("Map", "List")
 //    use rememberSaveable to keep the values during configuration changes.
@@ -120,25 +156,27 @@ fun SearchResultScreen(
         ) {
 
             if (placesClient != null) {
-                LocationSearchBar(
-                    searchQuery,
-                    predictions,
-                    fetchPredictions,
-                    onSearchQueryChange,
-                    onSuggestionClick = { prediction ->
-                        onSearchQueryChange(prediction.getPrimaryText(null).toString())
-                        prediction.placeId.let { placeId ->
-                            placesClient.let { client ->
-                                viewModel.fetchPlaceLatLng(placeId, client)  // <-- new (Places SDK)
+                    LocationSearchBar(
+                        searchQuery,
+                        predictions,
+                        fetchPredictions,
+                        onSearchQueryChange,
+                        onSuggestionClick = { prediction ->
+                            onSearchQueryChange(prediction.getPrimaryText(null).toString())
+                            prediction.placeId.let { placeId ->
+                                placesClient.let { client ->
+                                    viewModel.fetchPlaceLatLng(placeId, client)  // <-- new (Places SDK)
+                                }
                             }
-                        }
-                    },
-                    placesClient,
-                    expanded = searchBarExpanded,
-                    updateClosedExpanded = { closeExpanded = it },
-                    modifier = Modifier
-                        .weight(1f)
-                )
+                        },
+                        placesClient,
+                        expanded = searchBarExpanded,
+                        updateClosedExpanded = { closeExpanded = it },
+                        updateCoordinates,
+                        modifier = Modifier
+                            .weight(1f)
+                    )
+
 
             }
 
@@ -314,6 +352,7 @@ fun SearchResultScreen(
         }
     }
 }
+
 
 
 

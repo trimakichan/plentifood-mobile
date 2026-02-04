@@ -1,17 +1,24 @@
 package com.example.plentifood.ui.screens.search
 
+import android.content.Context
+import android.content.pm.PackageManager
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.plentifood.data.api.NearbySiteRepository
 import com.example.plentifood.data.models.site.Site
 import com.example.plentifood.ui.utils.ManifestUtils
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
@@ -33,14 +40,13 @@ class SearchResultViewModel(
 
     var numOfFilters by mutableIntStateOf(0)
 
-    var lat by mutableDoubleStateOf(47.6204)
+    private val defaultLat = 47.6204
+    private val defaultLon = -122.3494
+    var lat by mutableDoubleStateOf(defaultLat)
         private set
-    var lon by mutableDoubleStateOf(-122.3494)
+    var lon by mutableDoubleStateOf(defaultLon)
         private set
-
     var radiusMiles by mutableIntStateOf(5)
-        private set
-
     var days = mutableStateListOf<String>()
         private set
     var organizationType = mutableStateListOf<String>()
@@ -72,8 +78,10 @@ class SearchResultViewModel(
         this.numOfFilters = numOfFilters
     }
 
-    fun onChangeRadius(radius: Int) {
-        radiusMiles = radius
+    fun onUpdateRadius(text: String) {
+        if (text.isEmpty()) return
+
+        radiusMiles = text.toInt()
     }
 
     fun onDaySelected(days: List<String>) {
@@ -165,4 +173,28 @@ class SearchResultViewModel(
     }
 
 
+    // Function to fetch the user's location and update the state
+    fun fetchUserLocation(context: Context, fusedLocationClient: FusedLocationProviderClient) {
+        // Check if the location permission is granted
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                // Fetch the last known location
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    location?.let {
+                        // Update the user's location in the state
+                        val userLatLng = LatLng(it.latitude, it.longitude)
+                        updateCoordinates(userLatLng.latitude, userLatLng.longitude)
+
+                    }
+                }
+            } catch (e: SecurityException) {
+                Log.e("SearchResult","Permission for location access was revoked: ${e.localizedMessage}")
+            }
+        } else {
+            Log.e("SearchResult","Location permission is not granted.")
+        }
+    }
+
 }
+
+

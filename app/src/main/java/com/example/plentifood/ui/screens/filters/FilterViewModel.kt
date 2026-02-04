@@ -5,10 +5,11 @@ import androidx.lifecycle.ViewModel
 import kotlin.collections.addAll
 import kotlin.text.clear
 
-class FilterViewModel: ViewModel() {
+class FilterViewModel : ViewModel() {
 
-    val dayOptions = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-    val dayChecked =  mutableStateListOf(false, false, false, false, false, false, false)
+    val dayOptions =
+        listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+    val dayChecked = mutableStateListOf(false, false, false, false, false, false, false)
 
     val orgOptions = listOf("Food Bank", "Church", "Nonprofit", "Community Center", "Others")
     val orgChecked = mutableStateListOf(false, false, false, false, false)
@@ -24,10 +25,11 @@ class FilterViewModel: ViewModel() {
         for (index in serviceChecked.indices) serviceChecked[index] = false
     }
 
-    fun getNumOfFilters(): Int {
-        return dayChecked.count { it } + orgChecked.count { it } + serviceChecked.count { it }
-    }
-
+    fun getNumOfFilters(radiusApplied: Boolean = false): Int =
+        dayChecked.count { it } +
+        orgChecked.count { it } +
+        serviceChecked.count { it } +
+        if (radiusApplied) 1 else 0
     fun updateFiltersStatus(bool: Boolean) {
         AreFiltersApplied = bool
     }

@@ -37,7 +37,7 @@ fun MapSection(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             initialTarget,
-            12f
+            13f
         )
     }
 
@@ -55,7 +55,6 @@ fun MapSection(
 
         }
     }
-
 
     GoogleMap(
         modifier = modifier,
