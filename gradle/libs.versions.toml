@@ -20,6 +20,7 @@ runtime = "1.10.2"
 material3 = "1.4.0"
 foundation = "1.10.2"
 runtimeSaveable = "1.10.2"
+foundationLayout = "1.10.2"
 #material3 = "1.4.0"
 
 [libraries]
@@ -52,6 +53,7 @@ androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 androidx-compose-runtime-saveable = { group = "androidx.compose.runtime", name = "runtime-saveable", version.ref = "runtimeSaveable" }
+androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 #compose-material3 = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "composeMaterial3" }
 #androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 

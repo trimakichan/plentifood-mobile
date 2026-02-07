@@ -8,15 +8,12 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.plentifood.data.api.NearbySiteRepository
-import com.example.plentifood.data.models.site.Site
-import com.example.plentifood.ui.utils.ManifestUtils
+import com.example.plentifood.data.models.response.Site
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
@@ -47,8 +44,11 @@ class SearchResultViewModel(
     var lon by mutableDoubleStateOf(defaultLon)
         private set
     var radiusMiles by mutableIntStateOf(5)
+
+
     var days = mutableStateListOf<String>()
         private set
+
     var organizationType = mutableStateListOf<String>()
         private set
 
@@ -56,10 +56,12 @@ class SearchResultViewModel(
         private set
 
     private val repository = NearbySiteRepository()
+
     var sites by mutableStateOf<List<Site>>(emptyList())
         private set
     var totalResults by mutableStateOf(0)
         private set
+
     var isLoading by mutableStateOf(false)
         private set
     var errorMessage by mutableStateOf<String?>(null)

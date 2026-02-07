@@ -1,4 +1,4 @@
-package com.example.plentifood.data.models.site
+package com.example.plentifood.data.models.response
 
 data class Service(
     val id: Int,

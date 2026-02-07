@@ -215,7 +215,7 @@ fun ScrollContent(
                 ),
                 label = {
                     Text(
-                        "Enter mile range",
+                        "Enter search radius (default: 5 miles)",
                         style = MaterialTheme.typography.bodySmall
                     )
                 },

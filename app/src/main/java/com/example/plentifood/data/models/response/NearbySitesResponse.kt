@@ -1,4 +1,4 @@
-package com.example.plentifood.data.models.site
+package com.example.plentifood.data.models.response
 
 import com.google.gson.annotations.SerializedName
 

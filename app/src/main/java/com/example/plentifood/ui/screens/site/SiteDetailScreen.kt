@@ -41,7 +41,7 @@ import com.example.plentifood.R
 import com.example.plentifood.ui.composables.MapSection
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
-import com.example.plentifood.data.models.site.Site
+import com.example.plentifood.data.models.response.Site
 import com.example.plentifood.ui.composables.DirectionButton
 import com.example.plentifood.ui.composables.HoursRow
 import com.example.plentifood.ui.composables.InfoRow

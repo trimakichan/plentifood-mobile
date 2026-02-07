@@ -24,7 +24,6 @@ import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -39,11 +38,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.font.FontWeight
-import com.example.plentifood.data.models.site.Site
+import com.example.plentifood.data.models.response.Site
 import com.example.plentifood.ui.composables.InfoCard
 import com.example.plentifood.ui.composables.SingleChoiceSegmentedButton
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.remember
@@ -51,9 +51,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
+import com.example.plentifood.ui.composables.ButtonWithIcon
 import com.example.plentifood.ui.composables.LocationSearchBar
 import com.example.plentifood.ui.composables.MapSection
 import com.google.android.gms.location.LocationServices
@@ -69,6 +69,7 @@ fun SearchResultScreen(
     viewModel: SearchResultViewModel = viewModel(),
     onClickSiteDetail: (Int) -> Unit,
     onClickFilterButton: () -> Unit,
+    onClickBack: () -> Unit
 ) {
 
     val searchQuery = viewModel.searchQuery
@@ -95,7 +96,7 @@ fun SearchResultScreen(
             viewModel.fetchUserLocation(context, fusedLocationClient)
         } else {
             // Handle the case when permission is denied
-            Log.e("Search Result","Location permission was denied by the user.")
+            Log.e("Search Result", "Location permission was denied by the user.")
         }
     }
 
@@ -103,10 +104,14 @@ fun SearchResultScreen(
     LaunchedEffect(Unit) {
         when (PackageManager.PERMISSION_GRANTED) {
             // Check if the location permission is already granted
-            ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) -> {
+            ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
                 // Fetch the user's location and update the camera
                 viewModel.fetchUserLocation(context, fusedLocationClient)
             }
+
             else -> {
                 // Request the location permission if it has not been granted
                 permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -139,7 +144,8 @@ fun SearchResultScreen(
             radiusMiles = radiusMiles,
             days = days,
             organizationType = organizationType,
-            serviceType = serviceType)
+            serviceType = serviceType
+        )
     }
 
 
@@ -155,48 +161,59 @@ fun SearchResultScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
+            if (!searchBarExpanded) {
+                ButtonWithIcon(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(34.dp),
+                    Icons.Outlined.ArrowBackIosNew,
+                    onClickBack,
+                    description = "Go Back Icon"
+                )
+            }
+
+
             if (placesClient != null) {
-                    LocationSearchBar(
-                        searchQuery,
-                        predictions,
-                        fetchPredictions,
-                        onSearchQueryChange,
-                        onSuggestionClick = { prediction ->
-                            onSearchQueryChange(prediction.getPrimaryText(null).toString())
-                            prediction.placeId.let { placeId ->
-                                placesClient.let { client ->
-                                    viewModel.fetchPlaceLatLng(placeId, client)  // <-- new (Places SDK)
-                                }
+                LocationSearchBar(
+                    searchQuery,
+                    predictions,
+                    fetchPredictions,
+                    onSearchQueryChange,
+                    onSuggestionClick = { prediction ->
+                        onSearchQueryChange(prediction.getPrimaryText(null).toString())
+                        prediction.placeId.let { placeId ->
+                            placesClient.let { client ->
+                                viewModel.fetchPlaceLatLng(
+                                    placeId,
+                                    client
+                                )  // <-- new (Places SDK)
                             }
-                        },
-                        placesClient,
-                        expanded = searchBarExpanded,
-                        updateClosedExpanded = { closeExpanded = it },
-                        updateCoordinates,
-                        modifier = Modifier
-                            .weight(1f)
-                    )
+                        }
+                    },
+                    placesClient,
+                    expanded = searchBarExpanded,
+                    updateClosedExpanded = { closeExpanded = it },
+                    updateCoordinates,
+                    modifier = Modifier
+                        .weight(1f)
+                )
 
 
             }
 
             Spacer(modifier = Modifier.width(12.dp))
-            if (!searchBarExpanded) {
-                IconButton(
-                    onClick = { onClickFilterButton() }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Tune,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .size(34.dp)
-                            .rotate(90f)
-                    )
-                }
-            }
 
+            if (!searchBarExpanded) {
+                ButtonWithIcon(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(34.dp)
+                        .rotate(90f),
+                    Icons.Outlined.Tune,
+                    onClickFilterButton,
+                    description = "Filter Icon"
+                )
+            }
         }
     }
 
@@ -264,10 +281,11 @@ fun SearchResultScreen(
 
                 if (isLoading) {
 
-                    Text("Loading...",
+                    Text(
+                        "Loading...",
                         style = MaterialTheme.typography.bodyMedium
                     )
-                } else  {
+                } else {
                     Text(
                         buildAnnotatedString {
                             withStyle(
@@ -298,10 +316,11 @@ fun SearchResultScreen(
                         modifier = Modifier
                             .fillMaxSize(),
                         contentAlignment = Alignment.Center
-                    ) { ContainedLoadingIndicator(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        indicatorColor = MaterialTheme.colorScheme.primary,
-                    )
+                    ) {
+                        ContainedLoadingIndicator(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            indicatorColor = MaterialTheme.colorScheme.primary,
+                        )
                     }
 
                 } else {
@@ -351,9 +370,9 @@ fun SearchResultScreen(
             }
         }
     }
+
+
 }
-
-
 
 
 //@Preview(showBackground = true)

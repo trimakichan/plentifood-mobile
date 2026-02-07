@@ -5,9 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.plentifood.data.api.SiteRepository
-import com.example.plentifood.data.models.site.Site
+import com.example.plentifood.data.models.response.Site
 import kotlinx.coroutines.launch
 
 class SiteDetailViewModel: ViewModel() {

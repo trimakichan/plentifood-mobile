@@ -25,3 +25,5 @@ val Black40 = Color(0xFF8C8E98)
 
 // Base
 val White = Color(0xFFFFFFFF)
+
+val Red10 = Color(0xFFFF7081)

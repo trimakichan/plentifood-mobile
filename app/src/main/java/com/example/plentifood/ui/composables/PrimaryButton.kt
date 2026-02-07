@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.example.plentifood.ui.theme.PlentifoodTheme
 
 @Composable
-fun PrimaryButton(title: String, modifier: Modifier = Modifier, onButtonClick: () -> Unit) {
+fun PrimaryButton(title: String, modifier: Modifier = Modifier, onButtonClick: () -> Unit, enable: Boolean = true) {
     ElevatedButton(
         onClick = { onButtonClick() },
         modifier = Modifier
@@ -27,6 +27,7 @@ fun PrimaryButton(title: String, modifier: Modifier = Modifier, onButtonClick: (
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.surface
         ),
+        enabled = enable
     ) {
         Text(
             title,
