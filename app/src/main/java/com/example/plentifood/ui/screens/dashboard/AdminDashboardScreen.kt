@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,33 +18,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.HomeWork
-import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.ContainedLoadingIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,17 +44,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.plentifood.ui.composables.ButtonWithIcon
-import com.example.plentifood.ui.composables.DayHours
+import com.example.plentifood.ui.composables.CardDialog
 import com.example.plentifood.ui.composables.InfoCard
-import com.example.plentifood.ui.composables.MultiSelectedButton
-import com.example.plentifood.ui.composables.OutlineTextField
-import com.example.plentifood.ui.composables.PrimaryButton
+import com.example.plentifood.ui.composables.MessageOnlyDialog
 import com.example.plentifood.ui.screens.login.LoginViewModel
 import com.example.plentifood.ui.utils.toTitleFromSnakeCase
+import kotlinx.coroutines.delay
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -90,17 +74,33 @@ fun AdminDashboardScreen(
     val errorMessage = viewModel.errorMessage
 
     var showDialog by remember { mutableStateOf(false) }
+    var showCardDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var deleteSiteId by remember { mutableStateOf<Int?>(null) }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(viewModel.submitSuccess) {
         if (viewModel.submitSuccess) {
             viewModel.fetchOrganization(organizationId)
             showDialog = false
+            showCardDialog = true
             viewModel.submitSuccess = false
         }
     }
 
+    LaunchedEffect(viewModel.deleteSuccess) {
+        if (viewModel.deleteSuccess) {
+            showSuccessDialog = true
+            delay(2_000)
+            showSuccessDialog = false
+            viewModel.clearDeleteSuccess()
+        }
+    }
 
-
+//    fun updateShowDeleteDialog() {
+//        showDeleteDialog = true
+//    }
 
     Column(
         modifier = Modifier
@@ -284,6 +284,24 @@ fun AdminDashboardScreen(
 
                     }
 
+                    if (organizationResponse.sites.isEmpty()) {
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+
+                        ) {
+                            Text("Add a site with the + button.",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+
+                        }
+
+                        }
+
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize(),
@@ -298,6 +316,11 @@ fun AdminDashboardScreen(
                                 site,
                                 onClickSiteDetail = {
                                     onClickSiteDetail(site.id)
+                                },
+                                enableDelete = true,
+                                onClickDelete = {
+                                    showDeleteDialog = true
+                                    deleteSiteId = site.id
                                 }
                             )
                         }
@@ -318,339 +341,47 @@ fun AdminDashboardScreen(
 
 
     if (showDialog) {
-        Dialog(
-            onDismissRequest = { showDialog = false })
+        SiteRegistrationDialog(
+            onDismissRequest = { showDialog = false },
+            viewModel = viewModel
+        )
     }
 
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Dialog(
-    onDismissRequest: () -> Unit,
-    viewModel: AdminDashboardViewModel = viewModel()
-) {
-
-    val days = listOf(
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
-    )
-
-    val site = viewModel.uiState
-    val isValid =
-        site.siteName.isNotBlank() &&
-                site.address1.isNotBlank() &&
-                site.city.isNotBlank() &&
-                site.state.isNotBlank() &&
-                site.postalCode.isNotBlank() &&
-                site.phone.isNotBlank() &&
-                site.eligibility.isNotBlank() &&          // IMPORTANT (see #2)
-                site.serviceTypes.isNotEmpty()
-
-    Dialog(
-        onDismissRequest = { onDismissRequest() },
-        DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.background
-        ) {
-
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                "Site Registration",
-                                modifier = Modifier.fillMaxWidth(),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                        actions = {
-                            ButtonWithIcon(
-                                modifier = Modifier.size(44.dp),
-                                icon = Icons.Outlined.Close,
-                                onClick = onDismissRequest,
-                                description = "Close Icon"
-                            )
-                        }
-
-
-                    )
-                }
-
-            ) { padding ->
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(padding)
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-
-                    Text(
-                        "Please provide the details below to register a site",
-                        modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-
-
-                    Text(
-                        "* Required fields",
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.End,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        OutlineTextField(
-                            Icons.Outlined.HomeWork,
-                            "Site Name *",
-                            viewModel.uiState.siteName,
-                            onValueChange = {
-                                viewModel.updateSiteName(it)
-                            },
-                        )
-
-                        OutlineTextField(
-                            Icons.Outlined.LocationOn,
-                            "Address 1 *",
-                            viewModel.uiState.address1,
-                            onValueChange = {
-                                viewModel.updateAddress1(it)
-                            },
-                        )
-
-                        OutlineTextField(
-                            Icons.Outlined.LocationOn,
-                            "Address 2 (optional)",
-                            viewModel.uiState.address2,
-                            onValueChange = {
-                                viewModel.updateAddress2(it)
-                            },
-                        )
-
-                        OutlineTextField(
-                            Icons.Outlined.LocationOn,
-                            "City *",
-                            viewModel.uiState.city,
-                            onValueChange = {
-                                viewModel.updateCity(it)
-                            },
-                        )
-
-                        OutlineTextField(
-                            Icons.Outlined.LocationOn,
-                            "State *",
-                            viewModel.uiState.state,
-                            onValueChange = {
-                                viewModel.updateState(it)
-                            },
-                        )
-
-                        OutlineTextField(
-                            Icons.Outlined.LocationOn,
-                            "Postal Code *",
-                            viewModel.uiState.postalCode,
-                            onValueChange = {
-                                viewModel.updatePostalCode(it)
-                            },
-                        )
-
-                        OutlineTextField(
-                            Icons.Outlined.Phone,
-                            "Phone Number *",
-                            viewModel.uiState.phone,
-                            onValueChange = {
-                                viewModel.updatePhone(it)
-                            },
-                        )
-                    }
-
-
-                    Column {
-                        Text(
-                            "Eligibility *",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-
-                        DropdownMenuEligibility(
-                            selectedOption = viewModel.uiState.eligibility.toTitleFromSnakeCase(),
-                            onOptionSelected = {
-                                viewModel.updateEligibility(it)
-                            }
-                        )
-                    }
-
-
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(
-                            "Service Types *",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-
-                        MultiSelectedButton(
-                            viewModel.serviceTypes,
-                            viewModel.serviceTypesChecked,
-                            onCheckedChange = { index, value ->
-                                viewModel.serviceTypesChecked[index] = value
-                                viewModel.updateServiceTypes()
-                            })
-                    }
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            "Operating hours: ",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-
-                        Text(
-                            "NOTE: Select times for days the site is open. Leave blank if closed.",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-
-
-                        days.forEach { day ->
-                            DayHours(
-                                day = day,
-                                { day, time -> viewModel.updateOpen(day, time) },
-                                { day, time -> viewModel.updateClose(day, time) }
-                            )
-                        }
-
-                    }
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            "Add any notes (optional)",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-
-                        OutlinedTextField(
-                            value = viewModel.uiState.notes,
-                            onValueChange = { viewModel.updateNotes(it) },
-                            label = { Text("Service Notes") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-
-                    PrimaryButton(
-                        "Add Site",
-                        onButtonClick = {
-                            viewModel.organizationResponse?.id?.let { orgId ->
-                                viewModel.submitAddSite(orgId)
-                            }
-//                            if success -> show dialog
-
-                        },
-                        enable = isValid && !viewModel.isSubmitLoading
-                    )
-
-                }
-            }
-        }
+    if (showCardDialog) {
+        CardDialog(
+            onDismissRequest = { showCardDialog = false },
+            onConfirmation = { showCardDialog = false },
+            dialogTitle = "Site Registration",
+            dialogText = "Site was registered successfully\uD83C\uDF89",
+            icon = Icons.Outlined.CheckCircle,
+            enableDismissButton = false
+        )
     }
-}
 
-
-// refactor this and move it to composable later
-@Composable
-fun DropdownMenuEligibility(
-    selectedOption: String? = null,
-    onOptionSelected: (String) -> Unit
-) {
-
-    var expanded by remember { mutableStateOf(false) }
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .clickable { expanded = true }
-                .padding(vertical = 4.dp, horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = selectedOption ?: "Select Eligibility *",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .border(1.dp, MaterialTheme.colorScheme.secondary)
-                    .padding(vertical = 16.dp, horizontal = 12.dp)
-            )
-
-        }
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-//                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-
-            DropdownMenuItem(
-                text = { Text("General Public") },
-                onClick = {
-                    onOptionSelected("General Public")
-                    expanded = false
+    if (showDeleteDialog && deleteSiteId != null) {
+        CardDialog(
+            onDismissRequest = {
+                showDeleteDialog = false
+                deleteSiteId = null
+            },
+            onConfirmation = {
+                deleteSiteId?.let { siteId ->
+                    viewModel.deleteSite(siteId, organizationId)
+                    showDeleteDialog = false
+                    deleteSiteId = null
                 }
-            )
+            },
+            dialogTitle = "Delete Site",
+            dialogText = "Are you sure you want to delete this site?",
+            icon = Icons.Outlined.Delete,
+            enableDismissButton = true,
+        )
+    }
 
-            HorizontalDivider()
-
-            DropdownMenuItem(
-                text = { Text("Older Adults and Eligible") },
-                onClick = {
-                    onOptionSelected("Older Adults and Eligible")
-                    expanded = false
-                }
-            )
-
-            HorizontalDivider()
-
-            // Second section
-            DropdownMenuItem(
-                text = { Text("Youth Young Adults") },
-                onClick = {
-                    onOptionSelected("Youth Young Adults")
-                    expanded = false
-                }
-            )
-        }
+    if (showSuccessDialog) {
+        MessageOnlyDialog(
+            onDismissRequest = { },
+            message = "Site was deleted successfully!"
+        )
     }
 }

@@ -1,6 +1,7 @@
 package com.example.plentifood.ui.composables
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.plentifood.data.models.response.Site
@@ -32,6 +33,8 @@ fun MapSection(
     val initialTarget = selectedSite?.let { site ->
         LatLng(site.latitude, site.longitude)
     } ?: userLocation
+
+
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
@@ -82,6 +85,7 @@ fun MapSection(
                     else -> BitmapDescriptorFactory.HUE_AZURE
                 }
             }
+
             Marker(
                 state = MarkerState(position),
                 title = site.name,

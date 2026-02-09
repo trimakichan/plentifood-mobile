@@ -37,8 +37,9 @@ class SearchResultViewModel(
 
     var numOfFilters by mutableIntStateOf(0)
 
-    private val defaultLat = 47.6204
-    private val defaultLon = -122.3494
+    var defaultLat = 47.6204
+    var defaultLon = -122.3494
+
     var lat by mutableDoubleStateOf(defaultLat)
         private set
     var lon by mutableDoubleStateOf(defaultLon)
@@ -71,9 +72,16 @@ class SearchResultViewModel(
         searchQuery = newValue
     }
 
+    fun resetSearch() {
+        lat = defaultLat
+        lon = defaultLon
+        predictions = emptyList()
+        searchQuery = ""
+    }
+
     fun updateCoordinates(newLat: Double, newLon: Double) {
-       lat = newLat
-       lon = newLon
+        lat = newLat
+        lon = newLon
     }
 
     fun onUpdateNumOfFilters(numOfFilters: Int) {
@@ -102,6 +110,7 @@ class SearchResultViewModel(
         this.serviceType.addAll(serviceType)
 
     }
+
     fun fetchPredictions(query: String, client: PlacesClient) {
         // consider debounce
         if (query.length < 3) {
@@ -178,22 +187,32 @@ class SearchResultViewModel(
     // Function to fetch the user's location and update the state
     fun fetchUserLocation(context: Context, fusedLocationClient: FusedLocationProviderClient) {
         // Check if the location permission is granted
-        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             try {
                 // Fetch the last known location
                 fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                     location?.let {
                         // Update the user's location in the state
+                        defaultLat = it.latitude
+                        defaultLon = it.longitude
                         val userLatLng = LatLng(it.latitude, it.longitude)
+
                         updateCoordinates(userLatLng.latitude, userLatLng.longitude)
 
                     }
                 }
             } catch (e: SecurityException) {
-                Log.e("SearchResult","Permission for location access was revoked: ${e.localizedMessage}")
+                Log.e(
+                    "SearchResult",
+                    "Permission for location access was revoked: ${e.localizedMessage}"
+                )
             }
         } else {
-            Log.e("SearchResult","Location permission is not granted.")
+            Log.e("SearchResult", "Location permission is not granted.")
         }
     }
 

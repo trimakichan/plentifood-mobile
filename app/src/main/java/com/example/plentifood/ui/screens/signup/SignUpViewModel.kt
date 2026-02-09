@@ -33,7 +33,7 @@ class SignUpViewModel(): ViewModel() {
     fun  buildRegisterRequest(
         name: String,
         organizationType: String,
-        WebsiteUrl: String = "",
+        websiteUrl: String = "",
         username: String
         ):  RegisterRequest  {
 
@@ -48,7 +48,7 @@ class SignUpViewModel(): ViewModel() {
         return RegisterRequest(
             organization = OrgRequest(
                 name = name,
-                websiteUrl = WebsiteUrl,
+                websiteUrl = websiteUrl,
                 organizationType = orgTypeApiValue
             ),
             admin = AdminRequest(
@@ -61,14 +61,14 @@ class SignUpViewModel(): ViewModel() {
     fun register(
         name: String,
         organizationType: String,
-        WebsiteUrl: String = "",
+        websiteUrl: String = "",
         username: String
     ) {
 
         val requestBody =  buildRegisterRequest(
             name,
             organizationType,
-            WebsiteUrl,
+            websiteUrl,
             username
         )
 

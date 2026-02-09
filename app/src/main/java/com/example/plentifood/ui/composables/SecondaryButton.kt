@@ -19,7 +19,7 @@ import com.example.plentifood.ui.theme.PlentifoodTheme
 fun SecondaryButton(title: String, modifier: Modifier = Modifier, onButtonClick: () -> Unit) {
     OutlinedButton(
         onClick = { onButtonClick() },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),

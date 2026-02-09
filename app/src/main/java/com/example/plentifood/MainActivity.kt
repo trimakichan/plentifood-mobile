@@ -27,11 +27,8 @@ class MainActivity : ComponentActivity() {
         val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
         val apiKey = appInfo.metaData.getString("com.google.android.geo.API_KEY")
 
-//        println("Places.isInitialized() = ${Places.isInitialized()}")
-//        println("apiKey2 = $apiKey")
         if(!Places.isInitialized() && apiKey != null) {
                 Places.initializeWithNewPlacesApiEnabled(this,apiKey)
-//            println("APIKEY $apiKey")
             }
 
         setContent {

@@ -74,9 +74,6 @@ fun SiteDetailScreen(
             site.postalCode
         )
 
-
-
-
     if (isLoading) {
         Box(
             modifier = Modifier
@@ -94,7 +91,6 @@ fun SiteDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-
 
                     Box {
                         MapSection(
@@ -126,7 +122,6 @@ fun SiteDetailScreen(
 
                     Column(
                         modifier = Modifier
-//                        .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
                             .verticalScroll(scrollState)
                             .padding(32.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -195,10 +190,12 @@ fun SiteDetailScreen(
                         )
 
 
+
+
                         Text(
                             "Notes: ",
                             color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                         Text(
                             site.serviceNotes,
@@ -215,7 +212,7 @@ fun SiteDetailScreen(
                     onClick = {
                         val uri = "google.navigation:q=${site.latitude},${site.longitude}".toUri()
                         val intent = Intent(Intent.ACTION_VIEW, uri)
-                        // Force Google Maps if installed (optional)
+                        // Force Google Maps if installed
                         intent.setPackage("com.google.android.apps.maps")
                         context.startActivity(intent)
                     },

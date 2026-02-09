@@ -16,10 +16,15 @@ import androidx.compose.ui.unit.sp
 import com.example.plentifood.ui.theme.PlentifoodTheme
 
 @Composable
-fun PrimaryButton(title: String, modifier: Modifier = Modifier, onButtonClick: () -> Unit, enable: Boolean = true) {
+fun PrimaryButton(
+    title: String,
+    modifier: Modifier = Modifier,
+    onButtonClick: () -> Unit,
+    enable: Boolean = true
+) {
     ElevatedButton(
         onClick = { onButtonClick() },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 14.dp),

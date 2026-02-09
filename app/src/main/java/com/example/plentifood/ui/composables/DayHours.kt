@@ -62,9 +62,5 @@ fun DayHours(
 
         }
 
-
-
     }
-
-
 }

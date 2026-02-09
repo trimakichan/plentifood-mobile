@@ -64,8 +64,8 @@ fun LoginScreen(
             modifier = Modifier
                 .padding(4.dp)
                 .size(34.dp),
-            Icons.Outlined.ArrowBackIosNew,
-            onClickBack,
+            icon = Icons.Outlined.ArrowBackIosNew,
+            onClick = onClickBack,
             description = "Go Back Icon"
         )
 

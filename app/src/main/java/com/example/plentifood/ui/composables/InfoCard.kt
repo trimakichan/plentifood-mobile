@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +35,9 @@ import com.example.plentifood.ui.utils.toTitleFromSnakeCase
 fun InfoCard(
     modifier: Modifier,
     site: Site,
-    onClickSiteDetail: (Int) -> Unit
+    onClickSiteDetail: (Int) -> Unit,
+    enableDelete: Boolean = false,
+    onClickDelete: () -> Unit = {}
 ) {
 
     val services = site.services.map { it.name.toTitleFromSnakeCase() }
@@ -48,7 +52,7 @@ fun InfoCard(
         else -> com.example.plentifood.R.drawable.others
     }
 
-    Row(
+    Box(
         modifier = modifier
             .fillMaxWidth(0.95f)
             .clickable { onClickSiteDetail(site.id) }
@@ -60,76 +64,70 @@ fun InfoCard(
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)
             .padding(12.dp),
-
-        verticalAlignment = Alignment.CenterVertically,
-
+            contentAlignment = Alignment.Center
         ) {
-
-        Box(
+        Row(
             modifier = Modifier
-                .size(64.dp) // width & height
-                .clip(RoundedCornerShape(12.dp))
-//                .background(MaterialTheme.colorScheme.onSurface),
-        ) {
-            Image(
-                painter = painterResource(orgImage),
-                contentDescription = null,
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            ) {
+
+            Box(
                 modifier = Modifier
-                    .fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+                    .size(64.dp)
+                    .clip(RoundedCornerShape(12.dp))
+            ) {
+                Image(
+                    painter = painterResource(orgImage),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
 
+            }
+
+            Spacer(Modifier.width(12.dp))
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                Text(
+                    site.name,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    "Service Type: $serviceNames",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    "Phone: ${site.phone}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+
+            }
         }
 
-        Spacer(Modifier.width(12.dp))
-        Column(
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            Text(
-                site.name,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium
+        if (enableDelete) {
+            ButtonWithIcon(
+                icon = Icons.Outlined.Delete,
+                onClick = { onClickDelete() },
+                buttonModifier = Modifier
+                    .size(32.dp)
+                    .align(Alignment.BottomEnd),
+                description = "Delete Site Button",
+                tint = MaterialTheme.colorScheme.error,
             )
-            Text(
-                "Service Type: $serviceNames",
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Text(
-                "Phone: ${site.phone}",
-                style = MaterialTheme.typography.bodySmall
-            )
-
-//            OutlinedButton(
-//                onClick = {},
-//                modifier = Modifier.align(Alignment.End),
-//                shape = RoundedCornerShape(8.dp),
-//                contentPadding = PaddingValues(
-//                    horizontal = 12.dp,
-//                    vertical = 4.dp
-//                )
-//
-//            ) {
-//                Text(
-//                    "Details",
-//                    textAlign = TextAlign.Center
-//                )
-//            }
         }
-
 
     }
+
+
 }
 
-
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun InfoCardPreview() {
-//    PlentifoodTheme {
-//        InfoCard()
-//}}
 
 

@@ -32,11 +32,7 @@ sealed interface Route: NavKey {
         val organizationId: Int,
         val adminInfo: String
     ) : Route, NavKey
-    @Serializable
-    data object TodoList: Route, NavKey
 
-    @Serializable
-    data class TodoDetail(val todo:String): Route, NavKey
 
 
 }

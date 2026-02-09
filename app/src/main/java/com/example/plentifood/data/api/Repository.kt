@@ -8,6 +8,7 @@ import com.example.plentifood.data.models.response.NearbySitesResponse
 import com.example.plentifood.data.models.response.OrganizationResponse
 import com.example.plentifood.data.models.response.RegisterResponse
 import com.example.plentifood.data.models.response.Site
+import retrofit2.Response
 
 
 class NearbySiteRepository {
@@ -41,6 +42,7 @@ class SiteRepository {
         )
     }
 }
+
 class LoginRepository {
     suspend fun login(
         username: String,
@@ -82,5 +84,13 @@ class SiteRegisterRepository {
             organizationId,
             requestBody
         )
+    }
+}
+
+class SiteDeleteRepository {
+    suspend fun deleteSite(
+        siteId: Int
+    ): Response<Unit> {
+        return RetrofitInstance.api.deleteSite(siteId)
     }
 }

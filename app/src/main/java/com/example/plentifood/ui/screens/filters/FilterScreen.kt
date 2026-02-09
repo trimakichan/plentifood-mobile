@@ -82,7 +82,7 @@ fun FilterScreen(
                 navigationIcon = {
                     IconButton(onClick = {
                         onClickBack()
-                        if (!filterViewModel.AreFiltersApplied) reset = true
+                        if (!filterViewModel.areFiltersApplied) reset = true
 
                     }) {
                         Icon(

@@ -8,7 +8,9 @@ import com.example.plentifood.data.models.response.NearbySitesResponse
 import com.example.plentifood.data.models.response.OrganizationResponse
 import com.example.plentifood.data.models.response.RegisterResponse
 import com.example.plentifood.data.models.response.Site
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -57,6 +59,11 @@ interface ApiService {
         @Path("organizationId") organizationId: Int,
         @Body body: AddSiteRequest
     ): Site
+
+    @DELETE("sites/{siteId}")
+    suspend fun deleteSite(
+        @Path("siteId") siteId: Int
+    ): Response<Unit>
 
 }
 

@@ -11,20 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.plentifood.R
 import com.example.plentifood.ui.composables.PrimaryButton
@@ -56,9 +53,10 @@ fun HomeScreen(
 
             Image(
                 painter = painterResource(R.drawable.logo),
-                contentDescription = null,
+                contentDescription = "PlentiFood Logo",
                 modifier = Modifier
                     .size(64.dp)
+                    .testTag("home_logo")
             )
 
 
@@ -68,9 +66,11 @@ fun HomeScreen(
             Text(
                 "Welcome to the PlentiFood",
                 style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .testTag("home_title")
             )
 
             Image(
@@ -78,14 +78,25 @@ fun HomeScreen(
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(350.dp),
+                    .height(350.dp)
+                    .testTag("home_image"),
                 contentScale = ContentScale.Crop
             )
 
-            Column {
-                PrimaryButton("Let's begin", onButtonClick = onBeginClick)
+            Column (
+                modifier = Modifier.testTag("home_buttons"),
+            ) {
+                PrimaryButton(
+                    "Let's begin",
+                    modifier = Modifier.testTag("home_begin_button"),
+                    onButtonClick = onBeginClick,
+                )
                 Spacer(modifier = Modifier.height(14.dp))
-                SecondaryButton("Staff Login", onButtonClick = onStaffLoginClick)
+                SecondaryButton(
+                    "Staff Login",
+                    onButtonClick = onStaffLoginClick,
+                    modifier = Modifier.testTag("home_staff_button")
+                )
             }
 
             Row(
@@ -95,6 +106,7 @@ fun HomeScreen(
                 Text(
                     "Don't have a staff account? ",
                     style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
 
                 Text(
@@ -103,13 +115,11 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.primary,
                         textDecoration = TextDecoration.Underline
                     ),
-                    modifier = Modifier.clickable { onSignUpClick() },
+                    modifier = Modifier
+                        .clickable { onSignUpClick() }
+                        .testTag("home_sign_up_button"),
                 )
             }
-
-
-
-
 
         }
 }

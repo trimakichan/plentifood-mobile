@@ -17,7 +17,7 @@ class FilterViewModel : ViewModel() {
     val serviceOptions = listOf("Food Bank", "Meal")
     val serviceChecked = mutableStateListOf(false, false)
 
-    var AreFiltersApplied = false
+    var areFiltersApplied = false
 
     fun resetUi() {
         for (index in dayChecked.indices) dayChecked[index] = false
@@ -31,7 +31,7 @@ class FilterViewModel : ViewModel() {
         serviceChecked.count { it } +
         if (radiusApplied) 1 else 0
     fun updateFiltersStatus(bool: Boolean) {
-        AreFiltersApplied = bool
+        areFiltersApplied = bool
     }
 
 }

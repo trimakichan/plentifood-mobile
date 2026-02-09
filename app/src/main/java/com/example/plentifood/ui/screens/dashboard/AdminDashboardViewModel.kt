@@ -5,16 +5,19 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.plentifood.data.api.AdminDashboardRepository
+import com.example.plentifood.data.api.SiteDeleteRepository
 import com.example.plentifood.data.api.SiteRegisterRepository
 import com.example.plentifood.data.models.request.AddSiteRequest
 import com.example.plentifood.data.models.request.DayHoursRequest
 import com.example.plentifood.data.models.response.OrganizationResponse
 import com.example.plentifood.ui.state.AddSiteUiState
 import com.example.plentifood.ui.state.DayHoursValue
+import com.example.plentifood.ui.state.defaultHours
 import com.example.plentifood.ui.utils.toApi
 import kotlinx.coroutines.launch
 import java.time.LocalTime
@@ -23,8 +26,11 @@ import java.time.LocalTime
 @RequiresApi(Build.VERSION_CODES.O)
 class AdminDashboardViewModel() : ViewModel() {
     val adminRepository = AdminDashboardRepository()
-
     val siteRegisterRepository = SiteRegisterRepository()
+    val siteDeleteRepository = SiteDeleteRepository()
+
+    var deleteSuccess by mutableStateOf(false)
+        private set
     var organizationResponse by mutableStateOf<OrganizationResponse?>(null)
         private set
 
@@ -140,6 +146,18 @@ class AdminDashboardViewModel() : ViewModel() {
         println("Hours by day close: ${uiState.hoursByDay}")
     }
 
+    fun resetUiState() {
+        uiState = AddSiteUiState()
+    }
+
+    fun clearDeleteSuccess() {
+        deleteSuccess = false
+    }
+
+//    fun resetHoursByDay(){
+//        uiState = uiState.copy(hoursByDay = defaultHours())
+//        println("Hours by day reset: ${uiState.hoursByDay}")
+//    }
 
     fun submitAddSite(organizationId: Int) {
         val hoursRequest: Map<String, List<DayHoursRequest>> =
@@ -180,6 +198,7 @@ class AdminDashboardViewModel() : ViewModel() {
                 val response = siteRegisterRepository.addSite(organizationId, request)
                 println("Site Register response: $response")
                 submitSuccess = true
+                resetUiState()
 
             } catch (e: Exception) {
                 errorMessage = e.message
@@ -211,6 +230,24 @@ class AdminDashboardViewModel() : ViewModel() {
 
         }
 
+    }
+
+    fun deleteSite(siteId: Int, organizationId: Int) {
+        viewModelScope.launch {
+        try {
+           val response = siteDeleteRepository.deleteSite(siteId)
+
+            if (response.isSuccessful) {
+                deleteSuccess = true
+                fetchOrganization(organizationId)
+                println("Delete Success")
+            }
+
+        } catch (e: Exception) {
+            errorMessage = e.message
+            println("Delete Error $errorMessage")
+        }
+        }
     }
 
 }

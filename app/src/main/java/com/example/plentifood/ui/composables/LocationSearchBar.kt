@@ -48,7 +48,8 @@ fun LocationSearchBar(
     placesClient: PlacesClient,
     expanded: Boolean = false,
     updateClosedExpanded: (Boolean) -> Unit = {},
-    updateCoordinates: (Double, Double) -> Unit,
+    resetSearch: () -> Unit,
+    clearSelectedSite: () -> Unit,
     modifier: Modifier
 ) {
     val colorScheme = MaterialTheme.colorScheme
@@ -61,6 +62,8 @@ fun LocationSearchBar(
                 SearchBarDefaults.InputField(
                     query = searchQuery,
                     onQueryChange = {
+                        clearSelectedSite()
+
                         updateClosedExpanded(false)
                         onSearchQueryChange(it)
                         fetchPredictions(it, placesClient)
@@ -79,8 +82,8 @@ fun LocationSearchBar(
                         if (searchQuery.isNotEmpty()) {
                             IconButton(
                                 onClick = {
-                                    updateCoordinates(47.6204, -122.3494)
-                                    onSearchQueryChange("")
+                                    clearSelectedSite()
+                                    resetSearch()
                                 }
                             ) {
                                 Icon(Icons.Default.Close, contentDescription = "Clear")
@@ -121,10 +124,7 @@ fun LocationSearchBar(
                             }
                     )
                 }
-
             }
-
-
         }
     )
 }

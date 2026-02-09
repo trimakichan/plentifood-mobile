@@ -1,6 +1,7 @@
 package com.example.plentifood.ui.screens.signup
 
 import android.annotation.SuppressLint
+import android.os.Message
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,9 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.plentifood.ui.composables.ButtonWithIcon
+import com.example.plentifood.ui.composables.MessageOnlyDialog
 import com.example.plentifood.ui.composables.OutlineTextField
 import com.example.plentifood.ui.composables.PrimaryButton
 import com.example.plentifood.ui.composables.SecondaryButton
+import kotlinx.coroutines.delay
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -57,9 +60,14 @@ fun SignUpScreen(
     val isLoading = viewModel.isLoading
     val errorMessage = viewModel.errorMessage
 
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(registerResponse) {
       val response = registerResponse ?: return@LaunchedEffect
+        showConfirmationDialog = true
+        delay(1_500)
+        showConfirmationDialog = false
         onNavigateToDashboard(response.organization.id, response.adminUser.username)
         viewModel.consumeRegisterSuccess()
     }
@@ -96,8 +104,8 @@ fun SignUpScreen(
             modifier = Modifier
                 .padding(4.dp)
                 .size(34.dp),
-            Icons.Outlined.ArrowBackIosNew,
-            onClickBack,
+            icon = Icons.Outlined.ArrowBackIosNew,
+            onClick =  onClickBack,
             description = "Go Back Icon"
         )
 
@@ -139,8 +147,6 @@ fun SignUpScreen(
                 onValueChange = {
                     username = it
                 },
-//                errorMsg = if(isRegisterClicked && username.isEmpty()) usernameErrorMsg else "" ,
-//                isLoading = isLoading
             )
 
             OutlineTextField(
@@ -150,8 +156,6 @@ fun SignUpScreen(
                 onValueChange = {
                     organizationName = it
                 },
-//                errorMsg = errorMessage,
-//                isLoading = isLoading
             )
 
             OutlineTextField(
@@ -161,8 +165,6 @@ fun SignUpScreen(
                 onValueChange = {
                    websiteUrl = it
                 },
-//                errorMsg = errorMessage,
-//                isLoading = isLoading
             )
 
             DropdownMenuWithDetails(
@@ -205,99 +207,17 @@ fun SignUpScreen(
 
 
     }
-}
 
-
-@Composable
-fun DropdownMenuWithDetails(
-    selectedOption: String? = null,
-    onOptionSelected: (String) -> Unit
-) {
-
-    var expanded by remember { mutableStateOf(false) }
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-//            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .clickable { expanded = true }
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = selectedOption ?: "Select Organization Type *",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .border(1.dp, MaterialTheme.colorScheme.secondary)
-                    .padding(vertical = 16.dp, horizontal = 12.dp)
-            )
-
-        }
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-//                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-
-            DropdownMenuItem(
-                text = { Text("Food Bank") },
-                onClick = {
-                    onOptionSelected("Food Bank")
-                    expanded = false
-                }
-            )
-
-            HorizontalDivider()
-
-            DropdownMenuItem(
-                text = { Text("Church") },
-                onClick = {
-                    onOptionSelected("Church")
-                    expanded = false
-                }
-            )
-
-            HorizontalDivider()
-
-            // Second section
-            DropdownMenuItem(
-                text = { Text("Nonprofit") },
-                onClick = {
-                    onOptionSelected("Nonprofit")
-                    expanded = false
-                 }
-            )
-
-            HorizontalDivider()
-
-            // Third section
-            DropdownMenuItem(
-                text = { Text("Community Center") },
-                onClick = {
-                    onOptionSelected("Community Center")
-                    expanded = false
-                }
-            )
-
-            HorizontalDivider()
-
-            DropdownMenuItem(
-                text = { Text("Others") },
-                onClick = {
-                    onOptionSelected("Others")
-                    expanded = false
-                }
-            )
-        }
+    if (showConfirmationDialog) {
+        MessageOnlyDialog(
+            onDismissRequest = { },
+            message = "Welcome aboard, ${registerResponse?.adminUser?.username}\uD83C\uDF89"
+        )
     }
 }
+
+
+
 
 //@Preview(showBackground= true)
 //@Composable

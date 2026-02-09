@@ -1,18 +1,16 @@
 package com.example.plentifood.navigation
 
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.example.plentifood.ui.screens.home.HomeScreen
-import com.example.plentifood.ui.screens.TodoDetailScreen
-import com.example.plentifood.ui.screens.TodoListScreen
 import com.example.plentifood.ui.screens.dashboard.AdminDashboardScreen
-import com.example.plentifood.ui.screens.dashboard.AdminDashboardViewModel
 import com.example.plentifood.ui.screens.filters.FilterScreen
 import com.example.plentifood.ui.screens.search.SearchResultScreen
 import com.example.plentifood.ui.screens.search.SearchResultViewModel
@@ -22,6 +20,7 @@ import com.example.plentifood.ui.screens.login.LoginScreen
 import com.example.plentifood.ui.screens.signup.SignUpScreen
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationRoot(
     modifier: Modifier = Modifier
@@ -123,24 +122,6 @@ fun NavigationRoot(
                         SiteDetailScreen(
                             siteId = key.siteId,
                             onClickBack = { backStack.removeLastOrNull() }
-                        )
-                    }
-                }
-
-                is Route.TodoList -> {
-                    NavEntry(key) {
-                        TodoListScreen(
-                            onTodoClick = {
-                                backStack.add(Route.TodoDetail(it))
-                            }
-                        )
-                    }
-                }
-
-                is Route.TodoDetail -> {
-                    NavEntry(key) {
-                        TodoDetailScreen(
-                            todo = key.todo
                         )
                     }
                 }
