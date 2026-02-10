@@ -1,6 +1,14 @@
+
+
+
+https://github.com/user-attachments/assets/c2e46f03-70f1-47dd-87d5-46301649a04f
+
+
+
 # Plentifood
 
-Plentifood is a mobile application that helps users find nearby food resources. Users can search for food banks, pantries, and other sites, and view them on a map.
+Plentifood is a mobile application that helps users find nearby food resources. Users can search for food banks, meals, and other sites, and view them on a map.
+This app was built as a capstone project for Ada Developers Academy.
 
 ## Disclaimer
 
@@ -16,8 +24,9 @@ Actual hours may be different. Please check official sources before visiting a l
 *   **Map View:** See all the food sites in your area on an interactive map.
 *   **Autocomplete Search:** Get search suggestions as you type.
 *   **Current Location:** Use your device's GPS to find food resources near you.
+*   **Get Directions:** Open directions to a selected site in Google Maps by clicking the directions icon.
 *   **Admin Sign-up:** Administrators can create an account to manage food resource listings.
-*   **Register Organizations and Sites:** Registered admins can add and update information about their organizations and food distribution sites.
+*   **Register Organizations and Sites:** Registered admins can add organizations and food distribution sites, and delete sites.
 
 ## Environmental Setup
 
