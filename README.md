@@ -2,6 +2,13 @@
 
 Plentifood is a mobile application that helps users find nearby food resources. Users can search for food banks, pantries, and other sites, and view them on a map.
 
+## Disclaimer
+
+Most site data in this app comes from the Seattle public food resources API (https://data.seattle.gov/resource/kkzf-ntnu.json).  
+Business hours shown in the app are placeholder values that were added manually for testing and development purposes.
+
+Actual hours may be different. Please check official sources before visiting a location.
+
 ## Features
 
 *   **Search for food sites:** Find food resources based on your current location or a searched address.
