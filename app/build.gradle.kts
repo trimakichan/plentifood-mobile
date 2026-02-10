@@ -89,6 +89,9 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.compose.runtime)
 
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+
     implementation("com.google.android.libraries.places:places:5.0.0")
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.foundation)

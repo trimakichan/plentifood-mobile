@@ -55,7 +55,7 @@ fun HomeScreen(
                 painter = painterResource(R.drawable.logo),
                 contentDescription = "PlentiFood Logo",
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(78.dp)
                     .testTag("home_logo")
             )
 

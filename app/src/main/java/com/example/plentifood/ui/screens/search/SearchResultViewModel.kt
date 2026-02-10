@@ -139,6 +139,7 @@ class SearchResultViewModel(
             .addOnSuccessListener { response ->
                 val loc = response.place.location
                 if (loc != null) {
+//                    println("fetchPlaceLatLng: $loc")
                     updateCoordinates(loc.latitude, loc.longitude)
                 }
             }
@@ -171,11 +172,11 @@ class SearchResultViewModel(
 
                 sites = response.results
                 totalResults = response.totalResults
-
                 println("Fetched sites: $sites")
             } catch (e: Exception) {
                 errorMessage = e.message
-                println("ERROR $errorMessage")
+
+                println("ERROR FETCHING SITES: $errorMessage")
             } finally {
                 isLoading = false
             }

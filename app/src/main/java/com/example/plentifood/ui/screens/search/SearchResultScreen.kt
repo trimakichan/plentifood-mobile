@@ -114,6 +114,7 @@ fun SearchResultScreen(
     }
 
     LaunchedEffect(lat, lon, radiusMiles, days, organizationType, serviceType) {
+        println("LaunchedEffect run lat lon")
         viewModel.fetchNearbySites(
             lat = lat,
             lon = lon,

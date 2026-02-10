@@ -26,9 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.plentifood.data.models.response.Site
+import com.example.plentifood.ui.utils.cleanAddress
 import com.example.plentifood.ui.utils.toTitleFromSnakeCase
 
 @Composable
@@ -96,17 +99,34 @@ fun InfoCard(
                     site.name,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    "Service Type: $serviceNames",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
                 )
 
-                Text(
-                    "Phone: ${site.phone}",
-                    style = MaterialTheme.typography.bodySmall
-                )
+                    Text(
+                        cleanAddress(site).joinToString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary,
+                        lineHeight = 16.sp
+                    )
+
+                Row() {
+
+                    Text(
+                        "Service Type: ",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        )
+                    Text(
+                        serviceNames,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.secondary,
+
+                        )
+                }
+
+
+
 
 
             }

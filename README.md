@@ -1,0 +1,40 @@
+# Plentifood
+
+Plentifood is a mobile application that helps users find nearby food resources. Users can search for food banks, pantries, and other sites, and view them on a map.
+
+## Features
+
+*   **Search for food sites:** Find food resources based on your current location or a searched address.
+*   **Filter results:** Narrow down your search by day of the week, organization type, service type, and radius in miles from the current or searched location.
+*   **Map View:** See all the food sites in your area on an interactive map.
+*   **Autocomplete Search:** Get search suggestions as you type.
+*   **Current Location:** Use your device's GPS to find food resources near you.
+*   **Admin Sign-up:** Administrators can create an account to manage food resource listings.
+*   **Register Organizations and Sites:** Registered admins can add and update information about their organizations and food distribution sites.
+
+## Environmental Setup
+
+To build and run this project, you will need to have Android Studio installed.
+
+### 1. Get the Code
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/your-username/plentifood.git
+```
+
+### 2. Set up API Keys
+
+The app uses the Google Maps API, which requires an API key.
+
+1.  Create a `local.properties` file in the root of the project.
+2.  Add your Google Maps API key to the `local.properties` file:
+
+```
+MAPS_API_KEY=YOUR_API_KEY
+```
+
+### 3. Build and Run
+
+Open the project in Android Studio and run the app on an emulator or a physical device.

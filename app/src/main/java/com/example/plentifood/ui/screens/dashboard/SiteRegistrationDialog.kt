@@ -128,7 +128,7 @@ fun SiteRegistrationDialog(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.secondary
+                       color = MaterialTheme.colorScheme.secondary
                     )
 
 
@@ -211,10 +211,12 @@ fun SiteRegistrationDialog(
                     }
 
 
-                    Column {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         Text(
                             "Eligibility *",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
 
@@ -227,10 +229,12 @@ fun SiteRegistrationDialog(
                     }
 
 
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         Text(
                             "Service Types *",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
 
@@ -251,7 +255,7 @@ fun SiteRegistrationDialog(
                             Column() {
                                 Text(
                                     "Operating hours: ",
-                                    style = MaterialTheme.typography.titleSmall,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.primary
                                 )
 
@@ -291,7 +295,7 @@ fun SiteRegistrationDialog(
                     ) {
                         Text(
                             "Add any notes (optional)",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
 

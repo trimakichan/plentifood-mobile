@@ -45,6 +45,7 @@ import com.example.plentifood.data.models.response.Site
 import com.example.plentifood.ui.composables.DirectionButton
 import com.example.plentifood.ui.composables.HoursRow
 import com.example.plentifood.ui.composables.InfoRow
+import com.example.plentifood.ui.utils.cleanAddress
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -65,14 +66,14 @@ fun SiteDetailScreen(
     val scrollState = rememberScrollState()
     val context = LocalContext.current
 
-    fun cleanAddress(site: Site): List<String> =
-        listOfNotNull(
-            site.addressLine1,
-            site.addressLine2,
-            site.city,
-            site.state,
-            site.postalCode
-        )
+//    fun cleanAddress(site: Site): List<String> =
+//        listOfNotNull(
+//            site.addressLine1,
+//            site.addressLine2,
+//            site.city,
+//            site.state,
+//            site.postalCode
+//        )
 
     if (isLoading) {
         Box(
