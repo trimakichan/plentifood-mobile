@@ -37,7 +37,7 @@ To build and run this project, you will need to have Android Studio installed.
 Clone the repository to your local machine:
 
 ```bash
-git clone [https://github.com/your-username/plentifood.git](https://github.com/trimakichan/plentifood-mobile.git)
+git clone https://github.com/trimakichan/plentifood-mobile.git
 ```
 
 ### 2. Set up API Keys
